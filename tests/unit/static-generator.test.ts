@@ -1,0 +1,34 @@
+import { describe, expect, it } from "vitest";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { generateStaticSite } from "../../src/lib/static/site-generator";
+
+describe("generateStaticSite", () => {
+  it("writes core static files", async () => {
+    const outputDir = path.join(process.cwd(), ".tmp/static-test");
+    await fs.rm(outputDir, { recursive: true, force: true });
+
+    const result = await generateStaticSite({
+      blog: { name: "My Blog", baseUrl: "https://example.com" },
+      posts: [
+        {
+          title: "Hello",
+          slug: "hello",
+          html: "<h1>Hello</h1><p>World</p>",
+          metaDescription: "World",
+          updatedAt: new Date("2026-05-04T00:00:00Z"),
+          tags: [],
+          category: null,
+        },
+      ],
+      outputDir,
+    });
+
+    expect(result.files).toContain("index.html");
+    expect(result.files).toContain("blog/hello/index.html");
+    expect(result.files).toContain("sitemap.xml");
+    expect(result.files).toContain("rss.xml");
+    expect(result.files).toContain("robots.txt");
+    await expect(fs.access(path.join(outputDir, "blog/hello/index.html"))).resolves.toBeUndefined();
+  });
+});

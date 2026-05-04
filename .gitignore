@@ -4,6 +4,7 @@ node_modules/
 .next/
 dist/
 build/
+.tmp/
 test-results/
 playwright-report/
 .env
