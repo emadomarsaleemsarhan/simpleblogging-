@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum PostStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  EDITOR
+  AUTHOR
+  VIEWER
+}
+
+enum AssetType {
+  IMAGE
+  DOCUMENT
+  VIDEO
+  OTHER
+}
+
+enum Provider {
+  LOCAL
+  WORDPRESS
+  MEDIUM
+  STATIC_HTML
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  name        String
+  password    String
+  ownedBlog   Blog?        @relation("BlogOwner")
+  memberships BlogMember[]
+  posts       Post[]
+  assets      Asset[]
+  exports     Export[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Blog {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  ownerId     String       @unique
+  owner       User         @relation("BlogOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members     BlogMember[]
+  posts       Post[]
+  categories  Category[]
+  tags        Tag[]
+  assets      Asset[]
+  exports     Export[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model BlogMember {
+  id        String   @id @default(cuid())
+  blogId    String
+  userId    String
+  role      Role     @default(OWNER)
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([blogId, userId])
+}
+
+model Post {
+  id          String       @id @default(cuid())
+  blogId      String
+  authorId    String
+  title       String
+  slug        String
+  excerpt     String?
+  content     String       @default("")
+  status      PostStatus   @default(DRAFT)
+  publishedAt DateTime?
+  blog        Blog         @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  author      User         @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  categories  Category[]
+  tags        Tag[]
+  assets      Asset[]
+  exports     Export[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@unique([blogId, slug])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  blogId    String
+  name      String
+  slug      String
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([blogId, slug])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  blogId    String
+  name      String
+  slug      String
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([blogId, slug])
+}
+
+model Asset {
+  id        String    @id @default(cuid())
+  blogId    String
+  postId    String?
+  userId    String
+  type      AssetType @default(IMAGE)
+  url       String
+  filename  String
+  mimeType  String?
+  altText   String?
+  blog      Blog      @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: SetNull)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Export {
+  id        String   @id @default(cuid())
+  blogId    String
+  postId    String?
+  userId    String
+  provider  Provider
+  status    String   @default("PENDING")
+  payload   String?
+  resultUrl String?
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: SetNull)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
