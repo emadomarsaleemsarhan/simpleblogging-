@@ -5,7 +5,8 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "node",
-    globals: true
+    globals: true,
+    include: ["tests/unit/**/*.test.ts"]
   },
   resolve: {
     alias: {
