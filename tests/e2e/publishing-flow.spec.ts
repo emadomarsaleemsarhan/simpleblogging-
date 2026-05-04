@@ -1,0 +1,31 @@
+import { expect, test } from "@playwright/test";
+
+test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
+  await page.goto("/login");
+  await page.getByLabel("Email").fill("admin@example.com");
+  await page.getByLabel("Password").fill("admin12345");
+  await page.getByRole("button", { name: "Sign in" }).click();
+
+  await page.getByLabel("Dashboard").getByRole("link", { name: "Upload Word" }).click();
+  await page.getByLabel("Word file").setInputFiles("tests/fixtures/docx/basic.docx");
+  await page.getByRole("button", { name: "Convert Word file" }).click();
+
+  await expect(page.getByLabel("Title")).toHaveValue("Basic Test Post", { timeout: 20000 });
+  await page.getByLabel("Status").selectOption("IN_REVIEW");
+  await page.getByRole("button", { name: "Save post" }).click();
+  await page.waitForLoadState("networkidle");
+
+  await expect(page.getByLabel("Status")).toHaveValue("IN_REVIEW");
+  await page.getByLabel("Status").selectOption("APPROVED");
+  await page.getByRole("button", { name: "Save post" }).click();
+  await page.waitForLoadState("networkidle");
+
+  await expect(page.getByLabel("Status")).toHaveValue("APPROVED");
+  await page.getByLabel("Status").selectOption("PUBLISHED");
+  await page.getByRole("button", { name: "Save post" }).click();
+  await page.waitForLoadState("networkidle");
+
+  await page.goto("/dashboard/export");
+  await page.getByRole("button", { name: "Export Website" }).click();
+  await expect(page.getByRole("link", { name: "Download ZIP" })).toBeVisible();
+});
