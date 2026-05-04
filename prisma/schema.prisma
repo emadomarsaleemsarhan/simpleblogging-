@@ -30,10 +30,8 @@ enum AssetType {
 }
 
 enum Provider {
-  LOCAL
-  WORDPRESS
-  MEDIUM
-  STATIC_HTML
+  ZIP
+  GITHUB
 }
 
 model User {
@@ -83,6 +81,7 @@ model Post {
   id          String       @id @default(cuid())
   blogId      String
   authorId    String
+  categoryId  String?
   title       String
   slug        String
   excerpt     String?
@@ -91,7 +90,7 @@ model Post {
   publishedAt DateTime?
   blog        Blog         @relation(fields: [blogId], references: [id], onDelete: Cascade)
   author      User         @relation(fields: [authorId], references: [id], onDelete: Restrict)
-  categories  Category[]
+  category    Category?    @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   tags        Tag[]
   assets      Asset[]
   exports     Export[]
