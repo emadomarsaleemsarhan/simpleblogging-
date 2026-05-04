@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-test("shows the blog publisher homepage", async ({ page }) => {
+test("redirects anonymous visitors to login", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { name: "Blog Publisher" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
 });
