@@ -52,6 +52,7 @@ model Blog {
   id          String       @id @default(cuid())
   name        String
   slug        String       @unique
+  baseUrl     String       @default("https://example.com/")
   ownerId     String       @unique
   owner       User         @relation("BlogOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   members     BlogMember[]

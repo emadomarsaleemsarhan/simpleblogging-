@@ -12,7 +12,6 @@ import { zipDirectory } from "@/lib/static/zip";
 export async function POST() {
   const session = await requireSession();
   const blog = await getDefaultBlogForUser(session.user.id);
-  const baseUrl = `https://example.com/${blog.slug}/`;
 
   const exportRecord = await db.export.create({
     data: {
@@ -44,7 +43,7 @@ export async function POST() {
     const result = await generateStaticSite({
       blog: {
         name: blog.name,
-        baseUrl,
+        baseUrl: blog.baseUrl,
       },
       posts: posts.map((post) => ({
         title: post.title,

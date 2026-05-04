@@ -28,10 +28,12 @@ async function main() {
     update: {
       name: "My Blog",
       slug: "my-blog",
+      baseUrl: "https://example.com/",
     },
     create: {
       name: "My Blog",
       slug: "my-blog",
+      baseUrl: "https://example.com/",
       ownerId: user.id,
     },
   });
