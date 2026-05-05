@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { portableHref } from "./links";
 import { renderRss } from "./rss";
 import { renderPage, renderPostPages, type StaticBlog, type StaticPost } from "./render";
 import { renderSitemap } from "./sitemap";
@@ -26,7 +27,7 @@ export async function generateStaticSite(input: {
       title: input.blog.name,
       description: `${input.blog.name} ${labels.posts}`,
       canonicalPath: "/",
-      body: `<h1>${escapeHtml(input.blog.name)}</h1>${renderPostList(input.posts)}`,
+      body: `<h1>${escapeHtml(input.blog.name)}</h1>${renderPostList("/", input.posts)}`,
     }),
     writtenFiles,
   );
@@ -39,7 +40,7 @@ export async function generateStaticSite(input: {
       title: `${labels.posts} - ${input.blog.name}`,
       description: `${input.blog.name} ${labels.posts}`,
       canonicalPath: "/blog/",
-      body: `<h1>${escapeHtml(labels.posts)}</h1>${renderPostList(input.posts)}`,
+      body: `<h1>${escapeHtml(labels.posts)}</h1>${renderPostList("/blog/", input.posts)}`,
     }),
     writtenFiles,
   );
@@ -64,7 +65,7 @@ export async function generateStaticSite(input: {
         title: `${category.name} - ${input.blog.name}`,
         description: `${labels.categories}: ${category.name}`,
         canonicalPath: publicPath,
-        body: `<h1>${escapeHtml(category.name)}</h1>${renderPostList(posts)}`,
+        body: `<h1>${escapeHtml(category.name)}</h1>${renderPostList(publicPath, posts)}`,
       }),
       writtenFiles,
     );
@@ -82,7 +83,7 @@ export async function generateStaticSite(input: {
         title: `${tag.name} - ${input.blog.name}`,
         description: `${labels.tags}: ${tag.name}`,
         canonicalPath: publicPath,
-        body: `<h1>${escapeHtml(tag.name)}</h1>${renderPostList(posts)}`,
+        body: `<h1>${escapeHtml(tag.name)}</h1>${renderPostList(publicPath, posts)}`,
       }),
       writtenFiles,
     );
@@ -108,9 +109,9 @@ function pathFromPublicPath(publicPath: string) {
   return trimmed.endsWith("/") ? `${trimmed}index.html` : trimmed;
 }
 
-function renderPostList(posts: StaticPost[]) {
+function renderPostList(currentPath: string, posts: StaticPost[]) {
   const items = posts
-    .map((post) => `<li><a href="/blog/${post.slug}/">${escapeHtml(post.title)}</a></li>`)
+    .map((post) => `<li><a href="${portableHref(currentPath, `/blog/${post.slug}/`)}">${escapeHtml(post.title)}</a></li>`)
     .join("");
   return `<ul>${items}</ul>`;
 }

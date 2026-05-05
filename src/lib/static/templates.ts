@@ -1,4 +1,5 @@
 import { directionForLocale, parseLocale, type Locale } from "@/lib/i18n/locales";
+import { portableHref } from "./links";
 
 export type StaticTemplateLabels = {
   posts: string;
@@ -12,6 +13,7 @@ export type StaticTemplateLabels = {
 export type StaticTemplatePage = {
   blogName: string;
   locale: Locale;
+  currentPath: string;
   title: string;
   description: string;
   canonicalUrl: string;
@@ -105,10 +107,10 @@ function createStaticTemplate(input: { key: string; name: string; rootStyle: str
   <div class="reading-progress" aria-hidden="true"><span></span></div>
   <header class="site-header">
     <div class="site-header-inner">
-      <a class="brand" href="/">${escapeHtml(page.blogName)}</a>
+      <a class="brand" href="${portableHref(page.currentPath, "/")}">${escapeHtml(page.blogName)}</a>
       <nav class="site-nav" aria-label="Primary">
-        <a href="/">${escapeHtml(pageLabels.home)}</a>
-        <a href="/blog/">${escapeHtml(pageLabels.posts)}</a>
+        <a href="${portableHref(page.currentPath, "/")}">${escapeHtml(pageLabels.home)}</a>
+        <a href="${portableHref(page.currentPath, "/blog/")}">${escapeHtml(pageLabels.posts)}</a>
       </nav>
     </div>
   </header>

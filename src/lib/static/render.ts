@@ -1,4 +1,5 @@
 import { paginateHtml } from "@/lib/posts/pagination";
+import { portableHref, rootRelative } from "./links";
 import { getStaticLocale, getStaticTemplate } from "./templates";
 
 export type StaticPost = {
@@ -37,6 +38,7 @@ export function renderPage(input: {
   return template.renderPage({
     blogName: input.blog.name,
     locale,
+    currentPath: input.canonicalPath,
     title: input.title,
     description: input.description,
     canonicalUrl: rootRelative(input.canonicalPath),
@@ -69,7 +71,7 @@ export function renderPostPages(blog: StaticBlog, post: StaticPost, wordThreshol
           headline: post.title,
           dateModified: post.updatedAt.toISOString(),
         },
-        body: `<article>${html}${renderPagination(post.slug, pageNumber, pages.length, labels)}</article>`,
+        body: `<article>${html}${renderPagination(canonicalPath, post.slug, pageNumber, pages.length, labels)}</article>`,
       }),
     };
   });
@@ -83,11 +85,8 @@ export function absoluteUrl(baseUrl: string, pathname: string) {
   return new URL(pathname, baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`).toString();
 }
 
-export function rootRelative(pathname: string) {
-  return pathname.startsWith("/") ? pathname : `/${pathname}`;
-}
-
 function renderPagination(
+  currentPath: string,
   slug: string,
   currentPage: number,
   pageCount: number,
@@ -98,14 +97,19 @@ function renderPagination(
   }
 
   const previous =
-    currentPage > 1 ? `<a href="${postPath(slug, currentPage - 1)}">${escapeHtml(labels.previous)}</a>` : "";
-  const next = currentPage < pageCount ? `<a href="${postPath(slug, currentPage + 1)}">${escapeHtml(labels.next)}</a>` : "";
+    currentPage > 1
+      ? `<a href="${portableHref(currentPath, postPath(slug, currentPage - 1))}">${escapeHtml(labels.previous)}</a>`
+      : "";
+  const next =
+    currentPage < pageCount
+      ? `<a href="${portableHref(currentPath, postPath(slug, currentPage + 1))}">${escapeHtml(labels.next)}</a>`
+      : "";
   const links = Array.from({ length: pageCount }, (_, index) => {
     const pageNumber = index + 1;
     if (pageNumber === currentPage) {
       return `<span aria-current="page">${pageNumber}</span>`;
     }
-    return `<a href="${postPath(slug, pageNumber)}">${pageNumber}</a>`;
+    return `<a href="${portableHref(currentPath, postPath(slug, pageNumber))}">${pageNumber}</a>`;
   }).join("");
 
   return `<nav class="pagination" aria-label="Post pages">${previous}${links}${next}</nav>`;
