@@ -1,4 +1,4 @@
-# Arabic Template and Static Preview Design
+# Bilingual Template and Static Preview Design
 
 Date: 2026-05-05
 
@@ -8,8 +8,8 @@ This design upgrades the Blog Publisher MVP with four required capabilities:
 
 - Root-relative links inside generated static HTML.
 - Preview of the last exported static website inside the admin dashboard.
-- Arabic and right-to-left layout as the default for both admin and published site.
-- A real template system with one polished default Arabic template.
+- Arabic and English support for both admin and published site.
+- A real template system with polished Arabic and English rendering modes.
 
 The change builds on the current Next.js MVP and keeps ZIP export as the primary publishing path.
 
@@ -18,15 +18,15 @@ The change builds on the current Next.js MVP and keeps ZIP export as the primary
 - Generate published HTML that uses root-relative links such as `/blog/post-slug/` instead of embedding the domain.
 - Keep absolute URLs only where they are required or expected for SEO documents and metadata.
 - Let admins preview the last successful exported site from the dashboard.
-- Translate the admin interface into Arabic and set the dashboard to `lang="ar"` and `dir="rtl"`.
-- Render the published static website with Arabic RTL layout.
+- Let each user/session switch the admin interface between Arabic and English.
+- Let each blog choose its published-site language and direction independently.
+- Render the published static website in Arabic RTL or English LTR based on blog settings.
 - Introduce a template registry so future templates can be added without rewriting the generator.
 - Ship one initial template named `arabic-default`.
 
 ## Non-Goals
 
 - Multiple selectable templates in this phase.
-- Bilingual admin language switching.
 - Theme marketplace or user-editable template code.
 - Replacing ZIP export or adding GitHub publishing.
 
@@ -88,14 +88,14 @@ The generator remains responsible for:
 
 The initial registry will always select `arabic-default`, but the boundary must make adding a second template straightforward later.
 
-## Arabic Default Template
+## Bilingual Default Template
 
-The `arabic-default` template renders HTML with:
+The initial default template supports two language modes:
 
-- `<html lang="ar" dir="rtl">`
-- Arabic navigation labels.
-- Arabic page headings for home, posts, categories, tags, and pagination.
-- RTL typography and spacing.
+- Arabic mode renders `<html lang="ar" dir="rtl">`.
+- English mode renders `<html lang="en" dir="ltr">`.
+- Navigation labels and page headings follow the selected blog language.
+- Typography and spacing adapt to direction.
 - A readable article layout.
 - Root-relative internal navigation.
 - Table of contents from article headings.
@@ -111,11 +111,11 @@ The template should work for every currently generated public page:
 - `/category/category-slug/`
 - `/tag/tag-slug/`
 
-## Admin Arabic and RTL
+## Admin Localization
 
-The admin dashboard becomes Arabic-first.
+The admin dashboard becomes bilingual. The user's selected admin language controls dashboard labels and direction. The blog's published language controls generated static output.
 
-Required translated areas:
+Required localized admin areas:
 
 - Sidebar navigation.
 - Login page.
@@ -129,10 +129,17 @@ Required translated areas:
 - Common status labels.
 - Common error and empty-state messages.
 
-The admin root layout should use Arabic directionality:
+The admin layout should set language and direction from the active admin locale:
 
-- `lang="ar"`
-- `dir="rtl"`
+- Arabic: `lang="ar"` and `dir="rtl"`
+- English: `lang="en"` and `dir="ltr"`
+
+The MVP can store the admin locale in a cookie or session-level preference. It does not need a full user profile settings table unless implementation already makes that cheaper.
+
+Blog settings should include a published-site language field:
+
+- Arabic published site: `ar` / `rtl`
+- English published site: `en` / `ltr`
 
 Post status values may remain enum values internally, but UI labels should display Arabic equivalents:
 
@@ -143,6 +150,8 @@ Post status values may remain enum values internally, but UI labels should displ
 - `ARCHIVED`: Arabic label meaning archived.
 
 Implementation should store these labels in a translation map so tests can assert the exact Arabic strings without coupling UI code to enum names.
+
+The same translation map should also include English labels for all statuses and dashboard text.
 
 ## Static Site Preview in Admin
 
@@ -188,7 +197,7 @@ Future schema cleanup can split this into typed columns if export providers grow
 
 ## Error Handling
 
-- If no completed export exists, the admin preview shows an Arabic empty state.
+- If no completed export exists, the admin preview shows an empty state in the active admin language.
 - If preview file resolution fails, return 404 without leaking local paths.
 - If the iframe cannot load a file, the admin page still keeps the ZIP download available.
 - Export failure handling remains unchanged: keep the previous successful export available.
@@ -198,22 +207,22 @@ Future schema cleanup can split this into typed columns if export providers grow
 Unit tests should verify:
 
 - Internal links in rendered HTML are root-relative.
-- Generated page shell contains `lang="ar"` and `dir="rtl"`.
-- Arabic status label mapping.
+- Generated page shell contains the blog language and direction.
+- Arabic and English status label mapping.
 - Template registry returns `arabic-default`.
 - Preview path resolver prevents path traversal.
 
 Integration or E2E tests should verify:
 
-- Login page and dashboard show Arabic labels.
+- Login page and dashboard can show Arabic and English labels.
 - Export creates a ZIP and a previewable static site.
 - Export page shows a preview action after successful export.
 - Preview route serves the generated `index.html`.
 
 ## Acceptance Criteria
 
-- Admin UI is Arabic and RTL by default.
-- Published static HTML is Arabic and RTL by default.
+- Admin UI supports Arabic RTL and English LTR.
+- Published static HTML supports Arabic RTL and English LTR per blog.
 - Generated internal links do not include the domain.
 - SEO artifacts still use `baseUrl` where appropriate.
 - Export page can preview the last generated site inside the admin.
