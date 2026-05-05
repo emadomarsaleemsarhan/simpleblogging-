@@ -1,6 +1,6 @@
 # Blog Publisher
 
-Blog Publisher converts Word `.docx` files into reviewable posts, manages a simple publishing workflow, generates a static blog, and exports the generated site as a ZIP.
+Blog Publisher converts Word `.docx` files into reviewable posts, manages a simple publishing workflow, generates a bilingual static blog, previews exports inside the admin dashboard, and exports the generated site as a ZIP.
 
 ## Local Development
 
@@ -22,6 +22,6 @@ npm run lint
 
 ## MVP Scope
 
-The MVP supports Word import, post editing, workflow statuses, taxonomy, static site generation, and ZIP export.
+The MVP supports Word import, post editing, workflow statuses, taxonomy, Arabic/English admin labels, per-blog published-site language, root-relative static links, template-based static rendering, in-admin export preview, and ZIP export.
 
 GitHub publishing is reserved for a future phase.
