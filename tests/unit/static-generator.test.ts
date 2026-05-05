@@ -58,4 +58,18 @@ describe("generateStaticSite", () => {
     expect(html).toContain('href="/blog/"');
     expect(html).not.toContain('href="https://example.com/blog/');
   });
+
+  it("renders the selected static template", async () => {
+    const outputDir = path.join(process.cwd(), ".tmp/static-template-test");
+    await fs.rm(outputDir, { recursive: true, force: true });
+
+    await generateStaticSite({
+      blog: { name: "My Blog", baseUrl: "https://example.com", locale: "en", templateKey: "editorial" },
+      posts: [],
+      outputDir,
+    });
+
+    const html = await fs.readFile(path.join(outputDir, "index.html"), "utf8");
+    expect(html).toContain('data-template="editorial"');
+  });
 });

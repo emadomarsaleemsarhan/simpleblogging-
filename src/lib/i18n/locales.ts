@@ -30,6 +30,10 @@ export type MessageKey =
   | "export.title"
   | "export.preview"
   | "export.downloadZip"
+  | "export.exportWebsite"
+  | "export.exporting"
+  | "export.failed"
+  | "export.completed"
   | "export.description"
   | "export.recent"
   | "export.status"
@@ -38,6 +42,7 @@ export type MessageKey =
   | "export.empty"
   | "settings.title"
   | "settings.siteLanguage"
+  | "settings.template"
   | "settings.blogName"
   | "settings.slug"
   | "settings.baseUrl"
@@ -75,6 +80,10 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "export.title": "Export",
     "export.preview": "Preview Website",
     "export.downloadZip": "Download ZIP",
+    "export.exportWebsite": "Export Website",
+    "export.exporting": "Exporting...",
+    "export.failed": "Export failed.",
+    "export.completed": "Export completed.",
     "export.description": "Generate a static website ZIP for the published posts in this blog.",
     "export.recent": "Recent exports",
     "export.status": "Status",
@@ -83,6 +92,7 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "export.empty": "No exports yet.",
     "settings.title": "Settings",
     "settings.siteLanguage": "Published site language",
+    "settings.template": "Published site template",
     "settings.blogName": "Blog name",
     "settings.slug": "Slug",
     "settings.baseUrl": "Base URL",
@@ -119,6 +129,10 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "export.title": "\u0627\u0644\u062a\u0635\u062f\u064a\u0631",
     "export.preview": "\u0645\u0639\u0627\u064a\u0646\u0629 \u0627\u0644\u0645\u0648\u0642\u0639",
     "export.downloadZip": "\u062a\u062d\u0645\u064a\u0644 ZIP",
+    "export.exportWebsite": "\u062a\u0635\u062f\u064a\u0631 \u0627\u0644\u0645\u0648\u0642\u0639",
+    "export.exporting": "\u062c\u0627\u0631\u064a \u0627\u0644\u062a\u0635\u062f\u064a\u0631...",
+    "export.failed": "\u0641\u0634\u0644 \u0627\u0644\u062a\u0635\u062f\u064a\u0631.",
+    "export.completed": "\u0627\u0643\u062a\u0645\u0644 \u0627\u0644\u062a\u0635\u062f\u064a\u0631.",
     "export.description": "\u0623\u0646\u0634\u0626 \u0645\u0644\u0641 ZIP \u0644\u0645\u0648\u0642\u0639 \u062b\u0627\u0628\u062a \u0645\u0646 \u0627\u0644\u0645\u0646\u0634\u0648\u0631\u0627\u062a \u0627\u0644\u0645\u0646\u0634\u0648\u0631\u0629 \u0641\u064a \u0647\u0630\u0647 \u0627\u0644\u0645\u062f\u0648\u0646\u0629.",
     "export.recent": "\u0622\u062e\u0631 \u0639\u0645\u0644\u064a\u0627\u062a \u0627\u0644\u062a\u0635\u062f\u064a\u0631",
     "export.status": "\u0627\u0644\u062d\u0627\u0644\u0629",
@@ -127,6 +141,7 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "export.empty": "\u0644\u0627 \u062a\u0648\u062c\u062f \u0639\u0645\u0644\u064a\u0627\u062a \u062a\u0635\u062f\u064a\u0631 \u0628\u0639\u062f.",
     "settings.title": "\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a",
     "settings.siteLanguage": "\u0644\u063a\u0629 \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0645\u0646\u0634\u0648\u0631",
+    "settings.template": "\u0642\u0627\u0644\u0628 \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0645\u0646\u0634\u0648\u0631",
     "settings.blogName": "\u0627\u0633\u0645 \u0627\u0644\u0645\u062f\u0648\u0646\u0629",
     "settings.slug": "\u0627\u0644\u0631\u0627\u0628\u0637",
     "settings.baseUrl": "\u0631\u0627\u0628\u0637 \u0627\u0644\u0645\u0648\u0642\u0639",

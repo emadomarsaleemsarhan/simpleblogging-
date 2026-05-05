@@ -2,19 +2,22 @@ export function BlogSettingsForm({
   action,
   blog,
   labels,
+  templates,
 }: {
   action: (formData: FormData) => Promise<void>;
-  blog: { name: string; slug: string; baseUrl: string; locale: string };
+  blog: { name: string; slug: string; baseUrl: string; locale: string; templateKey: string };
   labels: {
     blogName: string;
     slug: string;
     baseUrl: string;
     siteLanguage: string;
+    template: string;
     futureProviders: string;
     githubRepository: string;
     githubReserved: string;
     save: string;
   };
+  templates: { key: string; name: string }[];
 }) {
   return (
     <form action={action} className="stack-form">
@@ -35,6 +38,16 @@ export function BlogSettingsForm({
         <select name="locale" defaultValue={blog.locale}>
           <option value="en">English</option>
           <option value="ar">{"\u0627\u0644\u0639\u0631\u0628\u064a\u0629"}</option>
+        </select>
+      </label>
+      <label>
+        <span>{labels.template}</span>
+        <select name="templateKey" defaultValue={blog.templateKey}>
+          {templates.map((template) => (
+            <option key={template.key} value={template.key}>
+              {template.name}
+            </option>
+          ))}
         </select>
       </label>
       <fieldset className="future-settings">

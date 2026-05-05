@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
 test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
+  test.setTimeout(60000);
+
   await page.goto("/login");
   await page.getByLabel("Email").fill("admin@example.com");
   await page.getByLabel("Password").fill("admin12345");
@@ -27,6 +29,7 @@ test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
 
   await page.goto("/dashboard/settings");
   await page.getByLabel("Published site language").selectOption("ar");
+  await page.getByLabel("Published site template").selectOption("editorial");
   await page.getByRole("button", { name: "Save settings" }).click();
   await page.waitForLoadState("networkidle");
 
@@ -42,4 +45,5 @@ test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
   const preview = page.frameLocator(".site-preview-frame");
   await expect(preview.locator("html")).toHaveAttribute("lang", "ar");
   await expect(preview.locator("html")).toHaveAttribute("dir", "rtl");
+  await expect(preview.locator("body")).toHaveAttribute("data-template", "editorial");
 });

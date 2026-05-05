@@ -23,8 +23,14 @@ export type StaticTemplatePage = {
 
 export type StaticTemplate = {
   key: string;
+  name: string;
   labels: (locale: Locale) => StaticTemplateLabels;
   renderPage: (page: StaticTemplatePage) => string;
+};
+
+export type StaticTemplateOption = {
+  key: string;
+  name: string;
 };
 
 const labels: Record<Locale, StaticTemplateLabels> = {
@@ -46,8 +52,10 @@ const labels: Record<Locale, StaticTemplateLabels> = {
   },
 };
 
-export const defaultStaticTemplate: StaticTemplate = {
-  key: "default",
+function createStaticTemplate(input: { key: string; name: string; rootStyle: string; extraStyle?: string }): StaticTemplate {
+  return {
+    key: input.key,
+    name: input.name,
   labels: (locale) => labels[locale],
   renderPage: (page) => {
     const direction = directionForLocale(page.locale);
@@ -69,7 +77,7 @@ export const defaultStaticTemplate: StaticTemplate = {
   <meta property="og:description" content="${escapeHtml(page.description)}">
   ${page.structuredData ?? ""}
   <style>
-    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; background: #f8f8f4; color: #1f2933; }
+    :root { color-scheme: light; ${input.rootStyle} }
     * { box-sizing: border-box; }
     body { margin: 0; }
     a { color: inherit; }
@@ -90,9 +98,10 @@ export const defaultStaticTemplate: StaticTemplate = {
     .pagination [aria-current="page"] { background: #1f2933; color: white; }
     .reading-progress { background: #d9dee5; height: 4px; position: sticky; top: 0; }
     .reading-progress span { background: #1f6feb; display: block; height: 100%; width: 33%; }
+    ${input.extraStyle ?? ""}
   </style>
 </head>
-<body>
+<body data-template="${input.key}">
   <div class="reading-progress" aria-hidden="true"><span></span></div>
   <header class="site-header">
     <div class="site-header-inner">
@@ -108,13 +117,40 @@ export const defaultStaticTemplate: StaticTemplate = {
 </html>`;
   },
 };
+}
+
+export const defaultStaticTemplate = createStaticTemplate({
+  key: "default",
+  name: "Default",
+  rootStyle: "font-family: Arial, Helvetica, sans-serif; background: #f8f8f4; color: #1f2933;",
+});
+
+export const editorialStaticTemplate = createStaticTemplate({
+  key: "editorial",
+  name: "Editorial",
+  rootStyle: "font-family: Georgia, 'Times New Roman', serif; background: #fbfbf8; color: #172026;",
+  extraStyle: `
+    .site-header { border-bottom: 2px solid #172026; }
+    .brand { font-size: 1.25rem; letter-spacing: 0.03em; text-transform: uppercase; }
+    main { max-width: 900px; }
+    article { font-size: 1.08rem; line-height: 1.75; }
+    h1 { font-size: 2.4rem; line-height: 1.1; }
+  `,
+});
+
+const templates = [defaultStaticTemplate, editorialStaticTemplate];
+
+export const staticTemplateOptions: StaticTemplateOption[] = templates.map((template) => ({
+  key: template.key,
+  name: template.name,
+}));
 
 export function getStaticTemplate(key: string | undefined | null): StaticTemplate {
-  if (!key || key === defaultStaticTemplate.key) {
-    return defaultStaticTemplate;
-  }
+  return templates.find((template) => template.key === key) ?? defaultStaticTemplate;
+}
 
-  return defaultStaticTemplate;
+export function parseTemplateKey(value: string | undefined | null) {
+  return getStaticTemplate(value).key;
 }
 
 export function getStaticLocale(value: string | undefined | null): Locale {

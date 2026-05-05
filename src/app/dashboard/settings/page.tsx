@@ -8,6 +8,7 @@ import { getTranslator } from "@/lib/i18n/server";
 import { parseLocale } from "@/lib/i18n/locales";
 import { normalizeBaseUrl } from "@/lib/settings";
 import { createSlug } from "@/lib/slug";
+import { parseTemplateKey, staticTemplateOptions } from "@/lib/static/templates";
 
 export default async function SettingsPage() {
   const [session, translator] = await Promise.all([requireSession(), getTranslator()]);
@@ -21,6 +22,7 @@ export default async function SettingsPage() {
     const slug = createSlug(String(formData.get("slug") ?? name));
     const baseUrl = normalizeBaseUrl(String(formData.get("baseUrl") ?? ""));
     const locale = parseLocale(String(formData.get("locale") ?? ""));
+    const templateKey = parseTemplateKey(String(formData.get("templateKey") ?? ""));
 
     await db.blog.update({
       where: { id: blog.id },
@@ -29,6 +31,7 @@ export default async function SettingsPage() {
         slug,
         baseUrl,
         locale,
+        templateKey,
       },
     });
 
@@ -46,11 +49,13 @@ export default async function SettingsPage() {
           slug: translator.t("settings.slug"),
           baseUrl: translator.t("settings.baseUrl"),
           siteLanguage: translator.t("settings.siteLanguage"),
+          template: translator.t("settings.template"),
           futureProviders: translator.t("settings.futureProviders"),
           githubRepository: translator.t("settings.githubRepository"),
           githubReserved: translator.t("settings.githubReserved"),
           save: translator.t("settings.save"),
         }}
+        templates={staticTemplateOptions}
       />
     </section>
   );
