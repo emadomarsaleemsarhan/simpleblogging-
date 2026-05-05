@@ -38,6 +38,13 @@ export type MessageKey =
   | "export.empty"
   | "settings.title"
   | "settings.siteLanguage"
+  | "settings.blogName"
+  | "settings.slug"
+  | "settings.baseUrl"
+  | "settings.futureProviders"
+  | "settings.githubRepository"
+  | "settings.githubReserved"
+  | "settings.save"
   | "common.save";
 
 const messages: Record<Locale, Record<MessageKey, string>> = {
@@ -76,6 +83,13 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "export.empty": "No exports yet.",
     "settings.title": "Settings",
     "settings.siteLanguage": "Published site language",
+    "settings.blogName": "Blog name",
+    "settings.slug": "Slug",
+    "settings.baseUrl": "Base URL",
+    "settings.futureProviders": "Future publishing providers",
+    "settings.githubRepository": "GitHub repository",
+    "settings.githubReserved": "Reserved for GitHub publishing phase",
+    "settings.save": "Save settings",
     "common.save": "Save",
   },
   ar: {
@@ -113,6 +127,13 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "export.empty": "\u0644\u0627 \u062a\u0648\u062c\u062f \u0639\u0645\u0644\u064a\u0627\u062a \u062a\u0635\u062f\u064a\u0631 \u0628\u0639\u062f.",
     "settings.title": "\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a",
     "settings.siteLanguage": "\u0644\u063a\u0629 \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0645\u0646\u0634\u0648\u0631",
+    "settings.blogName": "\u0627\u0633\u0645 \u0627\u0644\u0645\u062f\u0648\u0646\u0629",
+    "settings.slug": "\u0627\u0644\u0631\u0627\u0628\u0637",
+    "settings.baseUrl": "\u0631\u0627\u0628\u0637 \u0627\u0644\u0645\u0648\u0642\u0639",
+    "settings.futureProviders": "\u0645\u0632\u0648\u062f\u0648 \u0627\u0644\u0646\u0634\u0631 \u0644\u0627\u062d\u0642\u0627",
+    "settings.githubRepository": "\u0645\u0633\u062a\u0648\u062f\u0639 GitHub",
+    "settings.githubReserved": "\u0645\u062d\u062c\u0648\u0632 \u0644\u0645\u0631\u062d\u0644\u0629 \u0627\u0644\u0646\u0634\u0631 \u0639\u0628\u0631 GitHub",
+    "settings.save": "\u062d\u0641\u0638 \u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a",
     "common.save": "\u062d\u0641\u0638",
   },
 };
