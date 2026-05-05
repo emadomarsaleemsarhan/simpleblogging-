@@ -4,6 +4,7 @@ import path from "node:path";
 import { renderRss } from "./rss";
 import { renderPage, renderPostPages, type StaticBlog, type StaticPost } from "./render";
 import { renderSitemap } from "./sitemap";
+import { getStaticLocale, getStaticTemplate } from "./templates";
 
 export async function generateStaticSite(input: {
   blog: StaticBlog;
@@ -14,6 +15,8 @@ export async function generateStaticSite(input: {
   await fs.mkdir(input.outputDir, { recursive: true });
 
   const writtenFiles: string[] = [];
+  const locale = getStaticLocale(input.blog.locale);
+  const labels = getStaticTemplate(input.blog.templateKey).labels(locale);
 
   await writeFile(
     input.outputDir,
@@ -21,7 +24,7 @@ export async function generateStaticSite(input: {
     renderPage({
       blog: input.blog,
       title: input.blog.name,
-      description: `${input.blog.name} posts`,
+      description: `${input.blog.name} ${labels.posts}`,
       canonicalPath: "/",
       body: `<h1>${escapeHtml(input.blog.name)}</h1>${renderPostList(input.posts)}`,
     }),
@@ -33,10 +36,10 @@ export async function generateStaticSite(input: {
     "blog/index.html",
     renderPage({
       blog: input.blog,
-      title: `Posts - ${input.blog.name}`,
-      description: `${input.blog.name} blog posts`,
+      title: `${labels.posts} - ${input.blog.name}`,
+      description: `${input.blog.name} ${labels.posts}`,
       canonicalPath: "/blog/",
-      body: `<h1>Posts</h1>${renderPostList(input.posts)}`,
+      body: `<h1>${escapeHtml(labels.posts)}</h1>${renderPostList(input.posts)}`,
     }),
     writtenFiles,
   );
@@ -59,7 +62,7 @@ export async function generateStaticSite(input: {
       renderPage({
         blog: input.blog,
         title: `${category.name} - ${input.blog.name}`,
-        description: `Posts in ${category.name}`,
+        description: `${labels.categories}: ${category.name}`,
         canonicalPath: publicPath,
         body: `<h1>${escapeHtml(category.name)}</h1>${renderPostList(posts)}`,
       }),
@@ -77,7 +80,7 @@ export async function generateStaticSite(input: {
       renderPage({
         blog: input.blog,
         title: `${tag.name} - ${input.blog.name}`,
-        description: `Posts tagged ${tag.name}`,
+        description: `${labels.tags}: ${tag.name}`,
         canonicalPath: publicPath,
         body: `<h1>${escapeHtml(tag.name)}</h1>${renderPostList(posts)}`,
       }),

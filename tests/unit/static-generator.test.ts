@@ -9,7 +9,7 @@ describe("generateStaticSite", () => {
     await fs.rm(outputDir, { recursive: true, force: true });
 
     const result = await generateStaticSite({
-      blog: { name: "My Blog", baseUrl: "https://example.com" },
+      blog: { name: "My Blog", baseUrl: "https://example.com", locale: "en" },
       posts: [
         {
           title: "Hello",
@@ -30,5 +30,32 @@ describe("generateStaticSite", () => {
     expect(result.files).toContain("rss.xml");
     expect(result.files).toContain("robots.txt");
     await expect(fs.access(path.join(outputDir, "blog/hello/index.html"))).resolves.toBeUndefined();
+  });
+
+  it("renders Arabic site direction and root-relative internal links", async () => {
+    const outputDir = path.join(process.cwd(), ".tmp/static-ar-test");
+    await fs.rm(outputDir, { recursive: true, force: true });
+
+    await generateStaticSite({
+      blog: { name: "مدونتي", baseUrl: "https://example.com", locale: "ar" },
+      posts: [
+        {
+          title: "مرحبا",
+          slug: "hello",
+          html: "<h1>مرحبا</h1><p>نص طويل</p>",
+          metaDescription: "نص طويل",
+          updatedAt: new Date("2026-05-04T00:00:00Z"),
+          tags: [],
+          category: null,
+        },
+      ],
+      outputDir,
+    });
+
+    const html = await fs.readFile(path.join(outputDir, "blog/hello/index.html"), "utf8");
+    expect(html).toContain('<html lang="ar" dir="rtl">');
+    expect(html).toContain('href="/"');
+    expect(html).toContain('href="/blog/"');
+    expect(html).not.toContain('href="https://example.com/blog/');
   });
 });

@@ -44,6 +44,7 @@ export async function POST() {
       blog: {
         name: blog.name,
         baseUrl: blog.baseUrl,
+        locale: blog.locale,
       },
       posts: posts.map((post) => ({
         title: post.title,
