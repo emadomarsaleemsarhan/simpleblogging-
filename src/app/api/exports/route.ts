@@ -66,7 +66,7 @@ export async function POST() {
       data: {
         status: "COMPLETED",
         resultUrl: zipPath,
-        payload: JSON.stringify({ files: result.files.length }),
+        payload: JSON.stringify({ files: result.files.length, siteDir: outputDir }),
       },
     });
 

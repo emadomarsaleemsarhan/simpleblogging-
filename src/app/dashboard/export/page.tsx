@@ -30,6 +30,7 @@ export default async function ExportPage() {
           <tr>
             <th>{translator.t("export.status")}</th>
             <th>{translator.t("export.updated")}</th>
+            <th>{translator.t("export.preview")}</th>
             <th>{translator.t("export.downloadZip")}</th>
           </tr>
         </thead>
@@ -38,6 +39,13 @@ export default async function ExportPage() {
             <tr key={exportRecord.id}>
               <td>{exportRecord.status}</td>
               <td>{exportRecord.updatedAt.toLocaleString()}</td>
+              <td>
+                {exportRecord.status === "COMPLETED" ? (
+                  <a href={`/dashboard/export/${exportRecord.id}/preview`}>{translator.t("export.preview")}</a>
+                ) : (
+                  translator.t("export.unavailable")
+                )}
+              </td>
               <td>
                 {exportRecord.status === "COMPLETED" ? (
                   <a href={`/api/exports/${exportRecord.id}/download`}>{translator.t("export.downloadZip")}</a>
@@ -49,7 +57,7 @@ export default async function ExportPage() {
           ))}
           {exports.length === 0 ? (
             <tr>
-              <td colSpan={3}>{translator.t("export.empty")}</td>
+              <td colSpan={4}>{translator.t("export.empty")}</td>
             </tr>
           ) : null}
         </tbody>

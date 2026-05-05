@@ -243,3 +243,15 @@ input {
   margin: 0;
   padding: 16px;
 }
+
+.preview-page {
+  min-height: calc(100vh - 48px);
+}
+
+.site-preview-frame {
+  background: white;
+  border: 1px solid #c9d1d9;
+  border-radius: 6px;
+  height: min(760px, calc(100vh - 190px));
+  width: 100%;
+}
