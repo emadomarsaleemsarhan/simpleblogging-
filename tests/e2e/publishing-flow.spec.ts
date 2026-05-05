@@ -25,7 +25,21 @@ test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
   await page.getByRole("button", { name: "Save post" }).click();
   await page.waitForLoadState("networkidle");
 
+  await page.goto("/dashboard/settings");
+  await page.getByLabel("Published site language").selectOption("ar");
+  await page.getByRole("button", { name: "Save settings" }).click();
+  await page.waitForLoadState("networkidle");
+
   await page.goto("/dashboard/export");
+  const exportResponse = page.waitForResponse(
+    (response) => response.url().endsWith("/api/exports") && response.request().method() === "POST",
+  );
   await page.getByRole("button", { name: "Export Website" }).click();
-  await expect(page.getByRole("link", { name: "Download ZIP" })).toBeVisible();
+  const exportPayload = (await (await exportResponse).json()) as { exportId: string };
+  await expect(page.getByRole("link", { name: "Download ZIP" }).first()).toBeVisible();
+  await page.goto(`/dashboard/export/${exportPayload.exportId}/preview`);
+
+  const preview = page.frameLocator(".site-preview-frame");
+  await expect(preview.locator("html")).toHaveAttribute("lang", "ar");
+  await expect(preview.locator("html")).toHaveAttribute("dir", "rtl");
 });
