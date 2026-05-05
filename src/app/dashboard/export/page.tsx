@@ -1,11 +1,12 @@
 import { getDefaultBlogForUser } from "@/lib/blogs";
 import { requireSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getTranslator } from "@/lib/i18n/server";
 
 import { ExportButton } from "./export-button";
 
 export default async function ExportPage() {
-  const session = await requireSession();
+  const [session, translator] = await Promise.all([requireSession(), getTranslator()]);
   const blog = await getDefaultBlogForUser(session.user.id);
   const exports = await db.export.findMany({
     where: {
@@ -20,16 +21,16 @@ export default async function ExportPage() {
 
   return (
     <section>
-      <h1>Export</h1>
-      <p>Generate a static website ZIP for the published posts in this blog.</p>
+      <h1>{translator.t("export.title")}</h1>
+      <p>{translator.t("export.description")}</p>
       <ExportButton />
-      <h2>Recent exports</h2>
+      <h2>{translator.t("export.recent")}</h2>
       <table className="data-table">
         <thead>
           <tr>
-            <th>Status</th>
-            <th>Updated</th>
-            <th>Download</th>
+            <th>{translator.t("export.status")}</th>
+            <th>{translator.t("export.updated")}</th>
+            <th>{translator.t("export.downloadZip")}</th>
           </tr>
         </thead>
         <tbody>
@@ -39,16 +40,16 @@ export default async function ExportPage() {
               <td>{exportRecord.updatedAt.toLocaleString()}</td>
               <td>
                 {exportRecord.status === "COMPLETED" ? (
-                  <a href={`/api/exports/${exportRecord.id}/download`}>Download ZIP</a>
+                  <a href={`/api/exports/${exportRecord.id}/download`}>{translator.t("export.downloadZip")}</a>
                 ) : (
-                  "Unavailable"
+                  translator.t("export.unavailable")
                 )}
               </td>
             </tr>
           ))}
           {exports.length === 0 ? (
             <tr>
-              <td colSpan={3}>No exports yet.</td>
+              <td colSpan={3}>{translator.t("export.empty")}</td>
             </tr>
           ) : null}
         </tbody>

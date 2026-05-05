@@ -3,9 +3,11 @@ import Link from "next/link";
 import { getDefaultBlogForUser } from "@/lib/blogs";
 import { requireSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getTranslator } from "@/lib/i18n/server";
+import { statusLabel } from "@/lib/i18n/locales";
 
 export default async function PostsPage() {
-  const session = await requireSession();
+  const [session, translator] = await Promise.all([requireSession(), getTranslator()]);
   const blog = await getDefaultBlogForUser(session.user.id);
   const posts = await db.post.findMany({
     where: { blogId: blog.id },
@@ -17,21 +19,21 @@ export default async function PostsPage() {
     <section>
       <div className="page-title-row">
         <div>
-          <h1>Posts</h1>
-          <p>Review converted Word posts and manage publishing status.</p>
+          <h1>{translator.t("posts.title")}</h1>
+          <p>{translator.t("posts.subtitle")}</p>
         </div>
         <Link className="button-link" href="/dashboard/posts/upload">
-          Upload Word
+          {translator.t("posts.upload")}
         </Link>
       </div>
       <table className="data-table">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Slug</th>
-            <th>Category</th>
-            <th>Status</th>
-            <th>Updated</th>
+            <th>{translator.t("table.title")}</th>
+            <th>{translator.t("table.slug")}</th>
+            <th>{translator.t("table.category")}</th>
+            <th>{translator.t("table.status")}</th>
+            <th>{translator.t("table.updated")}</th>
           </tr>
         </thead>
         <tbody>
@@ -41,14 +43,14 @@ export default async function PostsPage() {
                 <Link href={`/dashboard/posts/${post.id}`}>{post.title}</Link>
               </td>
               <td>{post.slug}</td>
-              <td>{post.category?.name ?? "Uncategorized"}</td>
-              <td>{post.status}</td>
+              <td>{post.category?.name ?? translator.t("posts.uncategorized")}</td>
+              <td>{statusLabel(post.status, translator.locale)}</td>
               <td>{post.updatedAt.toLocaleDateString()}</td>
             </tr>
           ))}
           {posts.length === 0 ? (
             <tr>
-              <td colSpan={5}>No posts yet.</td>
+              <td colSpan={5}>{translator.t("posts.empty")}</td>
             </tr>
           ) : null}
         </tbody>

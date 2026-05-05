@@ -1,14 +1,16 @@
 import Link from "next/link";
 
-const navigation = [
-  { href: "/dashboard/posts", label: "Posts" },
-  { href: "/dashboard/posts/upload", label: "Upload Word" },
-  { href: "/dashboard/taxonomy", label: "Categories & Tags" },
-  { href: "/dashboard/export", label: "Export" },
-  { href: "/dashboard/settings", label: "Settings" },
+import type { MessageKey } from "@/lib/i18n/locales";
+
+const navigation: { href: string; label: MessageKey }[] = [
+  { href: "/dashboard/posts", label: "nav.posts" },
+  { href: "/dashboard/posts/upload", label: "nav.upload" },
+  { href: "/dashboard/taxonomy", label: "nav.taxonomy" },
+  { href: "/dashboard/export", label: "nav.export" },
+  { href: "/dashboard/settings", label: "nav.settings" },
 ];
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ t }: { t: (key: MessageKey) => string }) {
   return (
     <aside className="dashboard-sidebar">
       <Link href="/dashboard/posts" className="dashboard-brand">
@@ -17,7 +19,7 @@ export function DashboardSidebar() {
       <nav aria-label="Dashboard">
         {navigation.map((item) => (
           <Link key={item.href} href={item.href}>
-            {item.label}
+            {t(item.label)}
           </Link>
         ))}
       </nav>

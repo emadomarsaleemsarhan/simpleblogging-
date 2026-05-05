@@ -1,16 +1,30 @@
 import { Suspense } from "react";
 
+import { LocaleSwitcher } from "@/components/locale-switcher";
+import { getTranslator } from "@/lib/i18n/server";
+
 import { LoginForm } from "./login-form";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const { locale, t } = await getTranslator();
+
   return (
     <main className="auth-page">
       <section>
+        <LocaleSwitcher currentLocale={locale} returnTo="/login" />
         <p className="eyebrow">Blog Publisher</p>
-        <h1>Sign in</h1>
-        <p>Manage Word imports, review posts, and export your static blog.</p>
+        <h1>{t("auth.signIn")}</h1>
+        <p>{t("auth.subtitle")}</p>
         <Suspense fallback={null}>
-          <LoginForm />
+          <LoginForm
+            labels={{
+              email: t("auth.email"),
+              password: t("auth.password"),
+              signIn: t("auth.signIn"),
+              signingIn: t("auth.signingIn"),
+              invalidLogin: t("auth.invalidLogin"),
+            }}
+          />
         </Suspense>
       </section>
     </main>

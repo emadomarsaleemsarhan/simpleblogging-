@@ -117,10 +117,31 @@ input {
 }
 
 .dashboard-header {
+  align-items: center;
   display: flex;
+  gap: 16px;
   justify-content: flex-end;
   margin-bottom: 28px;
   color: #52616b;
+}
+
+.locale-switcher {
+  display: flex;
+  gap: 8px;
+}
+
+.locale-switcher button {
+  border: 1px solid #c9d1d9;
+  border-radius: 6px;
+  background: white;
+  color: #1f2933;
+  cursor: pointer;
+  padding: 7px 10px;
+}
+
+.locale-switcher button[aria-pressed="true"] {
+  background: #1f2933;
+  color: white;
 }
 
 .page-title-row {
