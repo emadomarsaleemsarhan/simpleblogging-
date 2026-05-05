@@ -29,11 +29,13 @@ async function main() {
       name: "My Blog",
       slug: "my-blog",
       baseUrl: "https://example.com/",
+      locale: "en",
     },
     create: {
       name: "My Blog",
       slug: "my-blog",
       baseUrl: "https://example.com/",
+      locale: "en",
       ownerId: user.id,
     },
   });

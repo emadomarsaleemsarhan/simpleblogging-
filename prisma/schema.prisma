@@ -53,6 +53,7 @@ model Blog {
   name        String
   slug        String       @unique
   baseUrl     String       @default("https://example.com/")
+  locale      String       @default("en")
   ownerId     String       @unique
   owner       User         @relation("BlogOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   members     BlogMember[]
