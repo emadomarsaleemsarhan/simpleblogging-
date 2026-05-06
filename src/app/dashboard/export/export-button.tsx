@@ -44,7 +44,7 @@ export function ExportButton({
       </button>
       {error ? <p role="alert">{error}</p> : null}
       {exportId ? (
-        <p role="status">
+        <p role="status" className="export-success editorial-panel">
           {labels.completed}{" "}
           <a href={`/dashboard/export/${exportId}/preview`}>{labels.preview}</a>{" "}
           <a href={`/api/exports/${exportId}/download`}>{labels.downloadZip}</a>

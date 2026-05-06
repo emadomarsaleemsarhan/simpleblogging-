@@ -20,7 +20,7 @@ export function BlogSettingsForm({
   templates: { key: string; name: string }[];
 }) {
   return (
-    <form action={action} className="stack-form">
+    <form action={action} className="stack-form editorial-panel">
       <label>
         <span>{labels.blogName}</span>
         <input name="name" defaultValue={blog.name} required />

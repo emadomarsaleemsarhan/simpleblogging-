@@ -34,43 +34,45 @@ export default async function ExportPage() {
         }}
       />
       <h2>{translator.t("export.recent")}</h2>
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>{translator.t("export.status")}</th>
-            <th>{translator.t("export.updated")}</th>
-            <th>{translator.t("export.preview")}</th>
-            <th>{translator.t("export.downloadZip")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {exports.map((exportRecord) => (
-            <tr key={exportRecord.id}>
-              <td>{exportRecord.status}</td>
-              <td>{exportRecord.updatedAt.toLocaleString()}</td>
-              <td>
-                {exportRecord.status === "COMPLETED" ? (
-                  <a href={`/dashboard/export/${exportRecord.id}/preview`}>{translator.t("export.preview")}</a>
-                ) : (
-                  translator.t("export.unavailable")
-                )}
-              </td>
-              <td>
-                {exportRecord.status === "COMPLETED" ? (
-                  <a href={`/api/exports/${exportRecord.id}/download`}>{translator.t("export.downloadZip")}</a>
-                ) : (
-                  translator.t("export.unavailable")
-                )}
-              </td>
-            </tr>
-          ))}
-          {exports.length === 0 ? (
+      <div className="table-frame editorial-panel">
+        <table className="data-table">
+          <thead>
             <tr>
-              <td colSpan={4}>{translator.t("export.empty")}</td>
+              <th>{translator.t("export.status")}</th>
+              <th>{translator.t("export.updated")}</th>
+              <th>{translator.t("export.preview")}</th>
+              <th>{translator.t("export.downloadZip")}</th>
             </tr>
-          ) : null}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {exports.map((exportRecord) => (
+              <tr key={exportRecord.id}>
+                <td>{exportRecord.status}</td>
+                <td>{exportRecord.updatedAt.toLocaleString()}</td>
+                <td>
+                  {exportRecord.status === "COMPLETED" ? (
+                    <a href={`/dashboard/export/${exportRecord.id}/preview`}>{translator.t("export.preview")}</a>
+                  ) : (
+                    translator.t("export.unavailable")
+                  )}
+                </td>
+                <td>
+                  {exportRecord.status === "COMPLETED" ? (
+                    <a href={`/api/exports/${exportRecord.id}/download`}>{translator.t("export.downloadZip")}</a>
+                  ) : (
+                    translator.t("export.unavailable")
+                  )}
+                </td>
+              </tr>
+            ))}
+            {exports.length === 0 ? (
+              <tr>
+                <td colSpan={4}>{translator.t("export.empty")}</td>
+              </tr>
+            ) : null}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }

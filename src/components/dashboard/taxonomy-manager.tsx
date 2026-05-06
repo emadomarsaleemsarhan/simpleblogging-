@@ -15,7 +15,7 @@ export function TaxonomyManager({
 }) {
   return (
     <div className="taxonomy-grid">
-      <section>
+      <section className="editorial-panel taxonomy-panel">
         <h2>Categories</h2>
         <form action={createCategory} className="inline-form">
           <input name="name" placeholder="Category name" required />
@@ -37,7 +37,7 @@ export function TaxonomyManager({
           ))}
         </ul>
       </section>
-      <section>
+      <section className="editorial-panel taxonomy-panel">
         <h2>Tags</h2>
         <form action={createTag} className="inline-form">
           <input name="name" placeholder="Tag name" required />
