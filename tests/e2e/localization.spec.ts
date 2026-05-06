@@ -7,6 +7,7 @@ const arabic = {
 
 test("dashboard can switch between English and Arabic labels", async ({ page }) => {
   await page.goto("/login");
+  // Intentional redesign shell smoke hooks, not user-flow assertions.
   await expect(page.locator(".auth-page")).toBeVisible();
   await expect(page.locator(".locale-switcher")).toBeVisible();
   await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();

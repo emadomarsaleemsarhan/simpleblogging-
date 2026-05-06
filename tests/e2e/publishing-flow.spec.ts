@@ -39,8 +39,9 @@ test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
   );
   await page.getByRole("button", { name: "Export Website" }).click();
   const exportPayload = (await (await exportResponse).json()) as { exportId: string };
-  await expect(page.getByRole("status")).toContainText("Export completed.");
-  await expect(page.getByRole("link", { name: "Preview Website" }).first()).toBeVisible();
+  const exportStatus = page.getByRole("status");
+  await expect(exportStatus).toContainText("Export completed.");
+  await expect(exportStatus.getByRole("link", { name: "Preview Website" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Download ZIP" }).first()).toBeVisible();
   await page.goto(`/dashboard/export/${exportPayload.exportId}/preview`);
 
