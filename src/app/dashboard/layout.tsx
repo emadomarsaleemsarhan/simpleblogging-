@@ -13,8 +13,11 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
       <DashboardSidebar t={translator.t} />
       <main className="dashboard-main">
         <header className="dashboard-header">
+          <div>
+            <p className="dashboard-kicker">Blog Publisher</p>
+            <span className="dashboard-user">{session.user.email}</span>
+          </div>
           <LocaleSwitcher currentLocale={translator.locale} returnTo="/dashboard/posts" />
-          <span>{session.user.email}</span>
         </header>
         {children}
       </main>

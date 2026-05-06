@@ -10,11 +10,13 @@ export default async function LoginPage() {
 
   return (
     <main className="auth-page">
-      <section>
-        <LocaleSwitcher currentLocale={locale} returnTo="/login" />
-        <p className="eyebrow">Blog Publisher</p>
-        <h1>{t("auth.signIn")}</h1>
-        <p>{t("auth.subtitle")}</p>
+      <section className="auth-card editorial-panel">
+        <div className="auth-card-header">
+          <LocaleSwitcher currentLocale={locale} returnTo="/login" />
+          <p className="eyebrow">Blog Publisher</p>
+          <h1 className="auth-brand-title">{t("auth.signIn")}</h1>
+          <p>{t("auth.subtitle")}</p>
+        </div>
         <Suspense fallback={null}>
           <LoginForm
             labels={{

@@ -14,11 +14,12 @@ export function DashboardSidebar({ t }: { t: (key: MessageKey) => string }) {
   return (
     <aside className="dashboard-sidebar">
       <Link href="/dashboard/posts" className="dashboard-brand">
-        Blog Publisher
+        <span className="dashboard-brand-mark">BP</span>
+        <span>Blog Publisher</span>
       </Link>
-      <nav aria-label="Dashboard">
+      <nav aria-label="Dashboard" className="dashboard-nav">
         {navigation.map((item) => (
-          <Link key={item.href} href={item.href}>
+          <Link key={item.href} href={item.href} className="dashboard-nav-link">
             {t(item.label)}
           </Link>
         ))}
