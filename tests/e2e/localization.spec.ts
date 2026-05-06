@@ -7,6 +7,8 @@ const arabic = {
 
 test("dashboard can switch between English and Arabic labels", async ({ page }) => {
   await page.goto("/login");
+  await expect(page.locator(".auth-page")).toBeVisible();
+  await expect(page.locator(".locale-switcher")).toBeVisible();
   await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
 
   await page.getByRole("button", { name: arabic.language }).click();
