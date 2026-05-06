@@ -12,6 +12,8 @@
     "test:e2e": "playwright test",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "render:start": "node scripts/render-start.mjs",
     "prisma:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {

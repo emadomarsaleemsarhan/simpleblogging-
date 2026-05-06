@@ -1,6 +1,8 @@
 import path from "node:path";
 
-const storageRoot = path.join(process.cwd(), "storage");
+const storageRoot = process.env.BLOG_PUBLISHER_STORAGE_ROOT
+  ? path.resolve(process.env.BLOG_PUBLISHER_STORAGE_ROOT)
+  : path.join(process.cwd(), "storage");
 
 export function getBlogStoragePath(blogId: string) {
   return path.join(storageRoot, "blogs", blogId);
