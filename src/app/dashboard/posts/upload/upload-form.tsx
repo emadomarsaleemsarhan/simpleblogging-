@@ -32,7 +32,7 @@ export function UploadForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="stack-form">
+    <form onSubmit={handleSubmit} className="stack-form editorial-panel upload-panel">
       <label>
         <span>Word file</span>
         <input name="file" type="file" accept=".docx" required />

@@ -26,35 +26,41 @@ export default async function PostsPage() {
           {translator.t("posts.upload")}
         </Link>
       </div>
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>{translator.t("table.title")}</th>
-            <th>{translator.t("table.slug")}</th>
-            <th>{translator.t("table.category")}</th>
-            <th>{translator.t("table.status")}</th>
-            <th>{translator.t("table.updated")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {posts.map((post) => (
-            <tr key={post.id}>
-              <td>
-                <Link href={`/dashboard/posts/${post.id}`}>{post.title}</Link>
-              </td>
-              <td>{post.slug}</td>
-              <td>{post.category?.name ?? translator.t("posts.uncategorized")}</td>
-              <td>{statusLabel(post.status, translator.locale)}</td>
-              <td>{post.updatedAt.toLocaleDateString()}</td>
-            </tr>
-          ))}
-          {posts.length === 0 ? (
+      <div className="table-frame editorial-panel">
+        <table className="data-table">
+          <thead>
             <tr>
-              <td colSpan={5}>{translator.t("posts.empty")}</td>
+              <th>{translator.t("table.title")}</th>
+              <th>{translator.t("table.slug")}</th>
+              <th>{translator.t("table.category")}</th>
+              <th>{translator.t("table.status")}</th>
+              <th>{translator.t("table.updated")}</th>
             </tr>
-          ) : null}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {posts.map((post) => (
+              <tr key={post.id}>
+                <td>
+                  <Link href={`/dashboard/posts/${post.id}`}>{post.title}</Link>
+                </td>
+                <td>{post.slug}</td>
+                <td>{post.category?.name ?? translator.t("posts.uncategorized")}</td>
+                <td>
+                  <span className="status-chip" data-status={post.status}>
+                    {statusLabel(post.status, translator.locale)}
+                  </span>
+                </td>
+                <td>{post.updatedAt.toLocaleDateString()}</td>
+              </tr>
+            ))}
+            {posts.length === 0 ? (
+              <tr>
+                <td colSpan={5}>{translator.t("posts.empty")}</td>
+              </tr>
+            ) : null}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
