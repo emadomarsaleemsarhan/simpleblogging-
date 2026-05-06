@@ -30,14 +30,14 @@ async function main() {
       slug: "my-blog",
       baseUrl: "https://example.com/",
       locale: "en",
-      templateKey: "default",
+      templateKey: "editorial",
     },
     create: {
       name: "My Blog",
       slug: "my-blog",
       baseUrl: "https://example.com/",
       locale: "en",
-      templateKey: "default",
+      templateKey: "editorial",
       ownerId: user.id,
     },
   });

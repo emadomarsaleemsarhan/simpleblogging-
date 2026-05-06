@@ -113,7 +113,7 @@ function renderPostList(currentPath: string, posts: StaticPost[]) {
   const items = posts
     .map((post) => `<li><a href="${portableHref(currentPath, `/blog/${post.slug}/`)}">${escapeHtml(post.title)}</a></li>`)
     .join("");
-  return `<ul>${items}</ul>`;
+  return `<ul class="post-list">${items}</ul>`;
 }
 
 function uniqueTerms(terms: { name: string; slug: string }[]) {

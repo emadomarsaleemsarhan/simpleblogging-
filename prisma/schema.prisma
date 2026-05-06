@@ -54,7 +54,7 @@ model Blog {
   slug        String       @unique
   baseUrl     String       @default("https://example.com/")
   locale      String       @default("en")
-  templateKey String       @default("default")
+  templateKey String       @default("editorial")
   ownerId     String       @unique
   owner       User         @relation("BlogOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   members     BlogMember[]

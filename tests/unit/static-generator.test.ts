@@ -102,4 +102,20 @@ describe("generateStaticSite", () => {
     const html = await fs.readFile(path.join(outputDir, "index.html"), "utf8");
     expect(html).toContain('data-template="editorial"');
   });
+
+  it("uses the editorial template by default", async () => {
+    const outputDir = path.join(process.cwd(), ".tmp/static-default-template-test");
+    await fs.rm(outputDir, { recursive: true, force: true });
+
+    await generateStaticSite({
+      blog: { name: "My Blog", baseUrl: "https://example.com", locale: "en" },
+      posts: [],
+      outputDir,
+    });
+
+    const html = await fs.readFile(path.join(outputDir, "index.html"), "utf8");
+    expect(html).toContain('data-template="editorial"');
+    expect(html).toContain("--forest: #0f6f5c");
+    expect(html).toContain("class=\"post-list\"");
+  });
 });
