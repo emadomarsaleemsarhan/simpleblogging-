@@ -317,6 +317,8 @@ section > p {
 .data-table a {
   color: var(--forest-dark);
   font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .export-success a,
