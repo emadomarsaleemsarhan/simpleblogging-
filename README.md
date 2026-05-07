@@ -11,6 +11,18 @@ Blog Publisher converts Word `.docx` files into reviewable posts, manages a simp
 5. Run `npm run dev`.
 6. Sign in with `admin@example.com` / `admin12345`.
 
+For the Codex in-app browser or any custom local port, use:
+
+```bash
+npm run dev:local
+```
+
+This starts the app on `http://localhost:52344` and sets `NEXTAUTH_URL` to the same URL for the running process. To use another port:
+
+```bash
+PORT=3000 npm run dev:local
+```
+
 ## Useful Commands
 
 ```bash
