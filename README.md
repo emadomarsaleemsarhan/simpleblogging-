@@ -34,7 +34,7 @@ npm run lint
 
 ## Render Deployment
 
-This repository includes a `render.yaml` Blueprint for a single Render Web Service.
+This repository includes a `render.yaml` Blueprint for a single Render Web Service. The Render service uses the `starter` plan because persistent disks are not available on the free plan.
 
 Render uses a persistent disk mounted at `/var/data` for SQLite and generated ZIP exports:
 

@@ -2,7 +2,7 @@ services:
   - type: web
     name: blog-publisher
     runtime: node
-    plan: free
+    plan: starter
     buildCommand: npm ci && npm run prisma:generate && npm run build
     startCommand: npm run render:start
     healthCheckPath: /api/health
