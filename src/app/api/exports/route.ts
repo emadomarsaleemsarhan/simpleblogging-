@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 import { requireSession } from "@/lib/auth";
 import { getDefaultBlogForUser } from "@/lib/blogs";
+import { uploadRawBuffer } from "@/lib/cloudinary";
 import { db } from "@/lib/db";
 import { getExportPath, getExportZipPath } from "@/lib/paths";
 import { generateStaticSite } from "@/lib/static/site-generator";
@@ -59,15 +60,26 @@ export async function POST() {
       outputDir,
     });
     const archive = await zipDirectory(outputDir);
-    await fs.mkdir(path.dirname(zipPath), { recursive: true });
-    await fs.writeFile(zipPath, archive);
+    const cloudinaryArchive = await uploadRawBuffer({
+      buffer: archive,
+      publicId: `blog-publisher/${blog.id}/exports/${exportRecord.id}/website`,
+    });
+    if (!cloudinaryArchive) {
+      await fs.mkdir(path.dirname(zipPath), { recursive: true });
+      await fs.writeFile(zipPath, archive);
+    }
 
     await db.export.update({
       where: { id: exportRecord.id },
       data: {
         status: "COMPLETED",
-        resultUrl: zipPath,
-        payload: JSON.stringify({ files: result.files.length, siteDir: outputDir }),
+        resultUrl: cloudinaryArchive?.secureUrl ?? zipPath,
+        payload: JSON.stringify({
+          files: result.files.length,
+          siteDir: outputDir,
+          storage: cloudinaryArchive ? "cloudinary" : "local",
+          cloudinaryPublicId: cloudinaryArchive?.publicId,
+        }),
       },
     });
 

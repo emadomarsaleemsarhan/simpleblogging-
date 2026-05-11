@@ -21,6 +21,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ exp
     return NextResponse.json({ error: "Export not found." }, { status: 404 });
   }
 
+  if (isRemoteUrl(exportRecord.resultUrl)) {
+    return NextResponse.redirect(exportRecord.resultUrl);
+  }
+
   const archive = await fs.readFile(exportRecord.resultUrl);
   return new NextResponse(archive, {
     headers: {
@@ -28,4 +32,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ exp
       "Content-Disposition": `attachment; filename="${blog.slug}-website.zip"`,
     },
   });
+}
+
+function isRemoteUrl(value: string) {
+  return value.startsWith("https://") || value.startsWith("http://");
 }

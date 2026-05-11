@@ -35,7 +35,7 @@ npm run lint
 
 ## Render Deployment
 
-This repository includes a `render.yaml` Blueprint for a single Render Web Service plus a Render PostgreSQL database. The Render service uses the `starter` plan because persistent disks are not available on the free plan and the app still stores uploaded Word files and ZIP exports on disk.
+This repository includes a `render.yaml` Blueprint for a single Render Web Service plus a Render PostgreSQL database. Exported ZIP files are uploaded to Cloudinary when Cloudinary credentials are configured, so the web service can run on Render's free plan.
 
 Render uses PostgreSQL for application data:
 
@@ -43,10 +43,18 @@ Render uses PostgreSQL for application data:
 DATABASE_URL=<from Render PostgreSQL>
 ```
 
-Render also uses a persistent disk mounted at `/var/data` for uploaded Word files and generated ZIP exports:
+Render uses temporary local storage only while generating previews:
 
 ```text
-BLOG_PUBLISHER_STORAGE_ROOT=/var/data/storage
+BLOG_PUBLISHER_STORAGE_ROOT=/tmp/blog-publisher-storage
+```
+
+Set these Render environment variables for ZIP export storage:
+
+```text
+CLOUDINARY_CLOUD_NAME=<your cloud name>
+CLOUDINARY_API_KEY=<your api key>
+CLOUDINARY_API_SECRET=<your api secret>
 ```
 
 Before deploying, push this repository to GitHub, GitLab, or Bitbucket and create a Render Blueprint from `render.yaml`. In the Render Dashboard, set `NEXTAUTH_URL` to the final service URL, for example:
