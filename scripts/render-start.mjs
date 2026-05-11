@@ -1,32 +1,9 @@
 import { spawn } from "node:child_process";
-import fs from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 const port = process.env.PORT ?? "3000";
 
-await ensureSqliteFile(process.env.DATABASE_URL);
 await run("npx", ["prisma", "migrate", "deploy"]);
 await run("npx", ["next", "start", "-p", port], { inherit: true });
-
-async function ensureSqliteFile(databaseUrl) {
-  if (!databaseUrl?.startsWith("file:")) {
-    return;
-  }
-
-  const sqlitePath = sqlitePathFromUrl(databaseUrl);
-  await fs.mkdir(path.dirname(sqlitePath), { recursive: true });
-  const handle = await fs.open(sqlitePath, "a");
-  await handle.close();
-}
-
-function sqlitePathFromUrl(databaseUrl) {
-  const value = databaseUrl.slice("file:".length);
-  if (value.startsWith("/")) {
-    return fileURLToPath(databaseUrl);
-  }
-  return path.resolve(value);
-}
 
 function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {

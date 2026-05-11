@@ -6,10 +6,11 @@ Blog Publisher converts Word `.docx` files into reviewable posts, manages a simp
 
 1. Copy `.env.example` to `.env`.
 2. Run `npm install`.
-3. Run `npm run prisma:migrate -- --name init`.
-4. Run `npm run prisma:seed`.
-5. Run `npm run dev`.
-6. Sign in with `admin@example.com` / `admin12345`.
+3. Set `DATABASE_URL` to a PostgreSQL database. For local development you can use a local PostgreSQL server or a Render Postgres external connection string.
+4. Run `npm run prisma:migrate`.
+5. Run `npm run prisma:seed`.
+6. Run `npm run dev`.
+7. Sign in with `admin@example.com` / `admin12345`.
 
 For the Codex in-app browser or any custom local port, use:
 
@@ -34,12 +35,17 @@ npm run lint
 
 ## Render Deployment
 
-This repository includes a `render.yaml` Blueprint for a single Render Web Service. The Render service uses the `starter` plan because persistent disks are not available on the free plan.
+This repository includes a `render.yaml` Blueprint for a single Render Web Service plus a Render PostgreSQL database. The Render service uses the `starter` plan because persistent disks are not available on the free plan and the app still stores uploaded Word files and ZIP exports on disk.
 
-Render uses a persistent disk mounted at `/var/data` for SQLite and generated ZIP exports:
+Render uses PostgreSQL for application data:
 
 ```text
-DATABASE_URL=file:/var/data/dev.db
+DATABASE_URL=<from Render PostgreSQL>
+```
+
+Render also uses a persistent disk mounted at `/var/data` for uploaded Word files and generated ZIP exports:
+
+```text
 BLOG_PUBLISHER_STORAGE_ROOT=/var/data/storage
 ```
 
