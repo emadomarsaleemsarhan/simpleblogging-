@@ -12,6 +12,8 @@ Blog Publisher converts Word `.docx` files into reviewable posts, manages a simp
 6. Run `npm run dev`.
 7. Sign in with `admin@example.com` / `admin12345`.
 
+The default seed password is only allowed outside production. If you seed a production database, set `SEED_ADMIN_EMAIL` and a strong `SEED_ADMIN_PASSWORD` first.
+
 For the Codex in-app browser or any custom local port, use:
 
 ```bash

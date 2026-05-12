@@ -5,6 +5,7 @@ import { getDefaultBlogForUser } from "@/lib/blogs";
 import { requireSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { createSlug } from "@/lib/slug";
+import { deleteCategoryForBlog, deleteTagForBlog } from "@/lib/taxonomy";
 
 export default async function TaxonomyPage() {
   const session = await requireSession();
@@ -41,15 +42,17 @@ export default async function TaxonomyPage() {
 
   async function deleteCategory(formData: FormData) {
     "use server";
-    await requireSession();
-    await db.category.delete({ where: { id: String(formData.get("id")) } });
+    const session = await requireSession();
+    const blog = await getDefaultBlogForUser(session.user.id);
+    await deleteCategoryForBlog(blog.id, String(formData.get("id")));
     redirect("/dashboard/taxonomy");
   }
 
   async function deleteTag(formData: FormData) {
     "use server";
-    await requireSession();
-    await db.tag.delete({ where: { id: String(formData.get("id")) } });
+    const session = await requireSession();
+    const blog = await getDefaultBlogForUser(session.user.id);
+    await deleteTagForBlog(blog.id, String(formData.get("id")));
     redirect("/dashboard/taxonomy");
   }
 

@@ -1,4 +1,5 @@
 import { paginateHtml } from "@/lib/posts/pagination";
+import { sanitizePostHtml } from "@/lib/html";
 import { portableHref, rootRelative } from "./links";
 import { getStaticLocale, getStaticTemplate } from "./templates";
 
@@ -50,7 +51,7 @@ export function renderPage(input: {
 }
 
 export function renderPostPages(blog: StaticBlog, post: StaticPost, wordThreshold = 900) {
-  const pages = paginateHtml(post.html, wordThreshold);
+  const pages = paginateHtml(sanitizePostHtml(post.html), wordThreshold);
   const labels = getStaticTemplate(blog.templateKey).labels(getStaticLocale(blog.locale));
 
   return pages.map((html, index) => {

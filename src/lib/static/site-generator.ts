@@ -98,7 +98,13 @@ export async function generateStaticSite(input: {
 }
 
 async function writeFile(outputDir: string, relativePath: string, contents: string, writtenFiles: string[]) {
-  const destination = path.join(outputDir, relativePath);
+  const root = path.resolve(outputDir);
+  const destination = path.resolve(root, relativePath);
+
+  if (destination !== root && !destination.startsWith(`${root}${path.sep}`)) {
+    throw new Error(`Unsafe static output path: ${relativePath}`);
+  }
+
   await fs.mkdir(path.dirname(destination), { recursive: true });
   await fs.writeFile(destination, contents);
   writtenFiles.push(relativePath.replaceAll("\\", "/"));

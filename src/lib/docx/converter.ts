@@ -1,13 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import mammoth from "mammoth";
-import sanitizeHtml from "sanitize-html";
 
+import { sanitizePostHtml } from "@/lib/html";
 import { createSlug } from "@/lib/slug";
 
 import { countManualPageBreaks, insertPageBreakMarkers } from "./page-breaks";
-
-const PAGE_BREAK_TOKEN = "___BLOG_PUBLISHER_PAGE_BREAK___";
 
 type ConvertDocxInput = {
   filePath: string;
@@ -58,7 +56,7 @@ export async function convertDocxToPostDraft(input: ConvertDocxInput): Promise<C
 
   const pageBreakCount = await countManualPageBreaks(input.filePath);
   const htmlWithPageBreaks = insertPageBreakMarkers(result.value, pageBreakCount);
-  const html = sanitizeConvertedHtml(htmlWithPageBreaks);
+  const html = sanitizePostHtml(htmlWithPageBreaks);
   const warnings: ConversionWarning[] = result.messages.map((message) => ({
     code: message.type,
     message: message.message,
@@ -86,21 +84,6 @@ export async function convertDocxToPostDraft(input: ConvertDocxInput): Promise<C
     assets,
     warnings,
   };
-}
-
-function sanitizeConvertedHtml(html: string) {
-  return sanitizeHtml(html.replaceAll("<!-- wp:pagebreak -->", PAGE_BREAK_TOKEN), {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "h3", "h4", "h5", "h6", "img", "table", "thead", "tbody", "tr", "th", "td"]),
-    allowedAttributes: {
-      ...sanitizeHtml.defaults.allowedAttributes,
-      a: ["href", "name", "target", "rel"],
-      img: ["src", "alt", "title"],
-      "*": ["class"],
-    },
-    allowedSchemes: ["http", "https", "mailto", "tel"],
-  })
-    .replaceAll(PAGE_BREAK_TOKEN, "<!-- wp:pagebreak -->")
-    .trim();
 }
 
 function extractFirstMatch(html: string, pattern: RegExp) {

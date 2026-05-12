@@ -118,4 +118,58 @@ describe("generateStaticSite", () => {
     expect(html).toContain("--forest: #0f6f5c");
     expect(html).toContain("class=\"post-list\"");
   });
+
+  it("rejects public paths that would write outside the output directory", async () => {
+    const outputDir = path.join(process.cwd(), ".tmp/static-path-traversal-test");
+    const storageRoot = path.join(process.cwd(), ".tmp");
+    const escapedPath = path.join(storageRoot, "outside-owned", "index.html");
+    await fs.rm(outputDir, { recursive: true, force: true });
+    await fs.rm(path.dirname(escapedPath), { recursive: true, force: true });
+
+    await expect(
+      generateStaticSite({
+        blog: { name: "My Blog", baseUrl: "https://example.com", locale: "en" },
+        posts: [
+          {
+            title: "Unsafe",
+            slug: "../../outside-owned",
+            html: "<p>Unsafe</p>",
+            metaDescription: "Unsafe",
+            updatedAt: new Date("2026-05-04T00:00:00Z"),
+            tags: [],
+            category: null,
+          },
+        ],
+        outputDir,
+      }),
+    ).rejects.toThrow(/Unsafe static output path/);
+
+    await expect(fs.access(escapedPath)).rejects.toThrow();
+  });
+
+  it("does not emit active script content from stored post HTML", async () => {
+    const outputDir = path.join(process.cwd(), ".tmp/static-sanitized-html-test");
+    await fs.rm(outputDir, { recursive: true, force: true });
+
+    await generateStaticSite({
+      blog: { name: "My Blog", baseUrl: "https://example.com", locale: "en" },
+      posts: [
+        {
+          title: "Unsafe",
+          slug: "unsafe",
+          html: '<p>Unsafe</p><img src="x" onerror="alert(1)"><script>alert(2)</script>',
+          metaDescription: "Unsafe",
+          updatedAt: new Date("2026-05-04T00:00:00Z"),
+          tags: [],
+          category: null,
+        },
+      ],
+      outputDir,
+    });
+
+    const html = await fs.readFile(path.join(outputDir, "blog/unsafe/index.html"), "utf8");
+    expect(html).toContain("<p>Unsafe</p>");
+    expect(html).not.toContain("onerror");
+    expect(html).not.toContain("<script>alert(2)</script>");
+  });
 });

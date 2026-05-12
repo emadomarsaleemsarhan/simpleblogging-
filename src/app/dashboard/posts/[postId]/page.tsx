@@ -5,7 +5,9 @@ import { PostForm } from "@/components/dashboard/post-form";
 import { getDefaultBlogForUser } from "@/lib/blogs";
 import { requireSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { sanitizePostHtml } from "@/lib/html";
 import { canTransitionPostStatus } from "@/lib/posts/status";
+import { createSlug } from "@/lib/slug";
 
 export default async function EditPostPage({ params }: { params: Promise<{ postId: string }> }) {
   const session = await requireSession();
@@ -48,9 +50,9 @@ export default async function EditPostPage({ params }: { params: Promise<{ postI
       where: { id: currentPost.id },
       data: {
         title: String(formData.get("title") ?? ""),
-        slug: String(formData.get("slug") ?? ""),
+        slug: createSlug(String(formData.get("slug") ?? ""), currentPost.slug),
         excerpt: String(formData.get("excerpt") ?? ""),
-        content: String(formData.get("content") ?? ""),
+        content: sanitizePostHtml(String(formData.get("content") ?? "")),
         status: nextStatus,
         publishedAt: nextStatus === "PUBLISHED" ? new Date() : currentPost.publishedAt,
       },
