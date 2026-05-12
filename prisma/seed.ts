@@ -4,7 +4,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 
-import { getSeedAdminCredentials } from "../src/lib/seed-admin";
+import { getSeedAdminCredentials, shouldUpdateSeedPassword } from "../src/lib/seed-admin";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -14,15 +14,21 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   const credentials = getSeedAdminCredentials();
+  const passwordHash = bcrypt.hashSync(credentials.password, 10);
   const user = await prisma.user.upsert({
     where: { email: credentials.email },
-    update: {
-      name: "Admin",
-    },
+    update: shouldUpdateSeedPassword()
+      ? {
+          name: "Admin",
+          password: passwordHash,
+        }
+      : {
+          name: "Admin",
+        },
     create: {
       email: credentials.email,
       name: "Admin",
-      password: bcrypt.hashSync(credentials.password, 10),
+      password: passwordHash,
     },
   });
 

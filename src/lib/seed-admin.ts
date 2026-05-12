@@ -2,6 +2,7 @@ type SeedEnvironment = Partial<Pick<NodeJS.ProcessEnv, "NODE_ENV" | "SEED_ADMIN_
 
 const developmentEmail = "admin@example.com";
 const developmentPassword = "admin12345";
+const blockedProductionPasswords = new Set([developmentPassword, "change-me-before-production"]);
 
 export function getSeedAdminCredentials(env: SeedEnvironment = process.env) {
   const isProduction = env.NODE_ENV === "production";
@@ -16,9 +17,13 @@ export function getSeedAdminCredentials(env: SeedEnvironment = process.env) {
     throw new Error("SEED_ADMIN_PASSWORD is required when seeding production data.");
   }
 
-  if (isProduction && password === developmentPassword) {
-    throw new Error("Refusing to seed production with the default development password.");
+  if (isProduction && blockedProductionPasswords.has(password)) {
+    throw new Error("Refusing to seed production with a default or placeholder password.");
   }
 
   return { email, password };
+}
+
+export function shouldUpdateSeedPassword(env: SeedEnvironment = process.env) {
+  return env.NODE_ENV === "production";
 }
