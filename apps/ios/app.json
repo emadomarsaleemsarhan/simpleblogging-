@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Blog Publisher",
+    "slug": "blog-publisher-ios",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "scheme": "blogpublisher",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.taelum.blogpublisher",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Blog Publisher can use the camera when the web app asks to upload media.",
+        "NSPhotoLibraryUsageDescription": "Blog Publisher can use the photo library when the web app asks to upload media."
+      }
+    },
+    "android": {
+      "package": "org.taelum.blogpublisher"
+    },
+    "extra": {
+      "blogPublisherUrl": "https://blog-publisher-ic6i.onrender.com"
+    }
+  }
+}

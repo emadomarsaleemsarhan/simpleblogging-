@@ -35,6 +35,16 @@ npm run test:e2e
 npm run lint
 ```
 
+## iPhone App
+
+An Expo iPhone shell lives in `apps/ios`. It opens the deployed Blog Publisher platform in a native WebView and can be run with:
+
+```bash
+cd apps/ios
+npm install
+npm run start
+```
+
 ## Render Deployment
 
 This repository includes a `render.yaml` Blueprint for a single Render Web Service plus a Render PostgreSQL database. Exported ZIP files are uploaded to Cloudinary when Cloudinary credentials are configured, so the web service can run on Render's free plan.
