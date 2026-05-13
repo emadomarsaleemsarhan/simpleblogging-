@@ -24,10 +24,18 @@ function getAppUrl() {
   return String(configuredUrl).replace(/\/+$/, "");
 }
 
+function getUrlHost(value: string) {
+  try {
+    return new URL(value).host;
+  } catch {
+    return "";
+  }
+}
+
 export default function App() {
   const webViewRef = useRef<WebView>(null);
   const appUrl = useMemo(getAppUrl, []);
-  const allowedHost = useMemo(() => new URL(appUrl).host, [appUrl]);
+  const allowedHost = useMemo(() => getUrlHost(appUrl), [appUrl]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const [canGoBack, setCanGoBack] = useState(false);
@@ -104,7 +112,10 @@ export default function App() {
               }}
               onNavigationStateChange={handleNavigationStateChange}
               onShouldStartLoadWithRequest={(request) => {
-                const requestHost = new URL(request.url).host;
+                const requestHost = getUrlHost(request.url);
+                if (!requestHost) {
+                  return true;
+                }
                 const isSameApp = requestHost === allowedHost;
                 if (!isSameApp) {
                   Linking.openURL(request.url);
