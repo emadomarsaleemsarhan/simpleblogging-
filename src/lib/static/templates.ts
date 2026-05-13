@@ -81,22 +81,24 @@ function createStaticTemplate(input: { key: string; name: string; rootStyle: str
   <style>
     :root { color-scheme: light; ${input.rootStyle} }
     * { box-sizing: border-box; }
-    body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); line-height: 1.7; margin: 0; min-height: 100vh; }
+    body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); line-height: 1.72; margin: 0; min-height: 100vh; }
     body::before { background: linear-gradient(135deg, rgba(15, 111, 92, 0.07), transparent 34%), radial-gradient(circle at 86% 0%, rgba(201, 132, 43, 0.12), transparent 30%); content: ""; inset: 0; pointer-events: none; position: fixed; z-index: -1; }
     a { color: inherit; }
-    .site-header { background: var(--forest-dark); color: white; }
-    .site-header-inner { align-items: center; display: flex; gap: 18px; justify-content: space-between; margin: 0 auto; max-width: 1120px; padding: 18px 24px; }
-    .brand { align-items: center; display: inline-flex; font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; gap: 10px; text-decoration: none; }
-    .brand::before { align-items: center; background: var(--amber); border-radius: var(--radius-sm); color: #23180b; content: "BP"; display: inline-flex; font-family: var(--font-ui); font-size: 0.78rem; height: 34px; justify-content: center; width: 34px; }
-    .site-nav { display: flex; flex-wrap: wrap; gap: 8px; }
-    .site-nav a { border: 1px solid rgba(255, 255, 255, 0.18); border-radius: var(--radius-sm); color: rgba(255, 255, 255, 0.82); font-weight: 800; padding: 8px 11px; text-decoration: none; }
-    .site-nav a:hover { background: rgba(255, 255, 255, 0.10); color: white; }
-    main { margin: 0 auto; max-width: 1120px; padding: 44px 24px 70px; }
+    .reading-progress { background: var(--paper-deep); height: 4px; position: sticky; top: 0; z-index: 3; }
+    .reading-progress span { background: var(--forest); display: block; height: 100%; width: 33%; }
+    .static-masthead { background: rgba(255, 253, 248, 0.94); border-bottom: 2px solid var(--ink); color: var(--ink); }
+    .static-masthead-inner { align-items: center; display: flex; gap: 18px; justify-content: space-between; margin: 0 auto; max-width: 1120px; padding: 22px 24px; }
+    .static-brand { align-items: center; display: inline-flex; font-family: var(--font-display); font-size: clamp(1.7rem, 4vw, 2.7rem); font-weight: 900; gap: 12px; line-height: 1; text-decoration: none; }
+    .static-brand::before { align-items: center; background: var(--amber); border-radius: var(--radius-sm); color: #23180b; content: "BP"; display: inline-flex; font-family: var(--font-ui); font-size: 0.78rem; height: 36px; justify-content: center; width: 36px; }
+    .static-nav { display: flex; flex-wrap: wrap; gap: 10px; }
+    .static-nav a { border: 1px solid var(--line-strong); border-radius: var(--radius-sm); color: var(--ink-soft); font-weight: 900; padding: 8px 11px; text-decoration: none; }
+    .static-nav a:hover { background: var(--ink); border-color: var(--ink); color: white; }
+    .static-main { margin: 0 auto; max-width: 1120px; padding: 46px 24px 72px; }
     h1, h2, h3 { font-family: var(--font-display); letter-spacing: 0; line-height: 1.08; }
-    h1 { font-size: 3.2rem; margin: 0 0 22px; max-width: 820px; }
+    h1 { font-size: clamp(2.5rem, 6vw, 4.8rem); margin: 0 0 22px; max-width: 900px; }
     h2 { font-size: 2rem; margin-top: 2.1em; }
     p { color: var(--ink-soft); }
-    article { background: rgba(255, 253, 248, 0.78); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-soft); font-size: 1.05rem; margin: 0 auto; max-width: 820px; padding: 30px; }
+    article { background: rgba(255, 253, 248, 0.72); border-top: 1px solid var(--line); font-size: 1.08rem; margin: 0 auto; max-width: 820px; padding: 30px 0; }
     article > :first-child { margin-top: 0; }
     article a, .post-list a { color: var(--forest-dark); font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
     img, table { max-width: 100%; }
@@ -105,36 +107,33 @@ function createStaticTemplate(input: { key: string; name: string; rootStyle: str
     th { background: var(--mist); color: var(--ink-soft); }
     th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: start; }
     .post-list { display: grid; gap: 12px; list-style: none; margin: 26px 0 0; padding: 0; }
-    .post-list li { background: rgba(255, 253, 248, 0.84); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-tight); padding: 16px 18px; }
+    .post-list li { background: rgba(255, 253, 248, 0.86); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-tight); padding: 18px 20px; }
     .pagination { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
     .pagination a, .pagination span { border: 1px solid var(--line-strong); border-radius: var(--radius-sm); padding: 8px 11px; text-decoration: none; }
     .pagination [aria-current="page"] { background: var(--forest); color: white; }
-    .reading-progress { background: var(--paper-deep); height: 4px; position: sticky; top: 0; z-index: 3; }
-    .reading-progress span { background: var(--forest); display: block; height: 100%; width: 33%; }
     [dir="rtl"] body { text-align: start; }
-    [dir="rtl"] .site-header-inner { direction: rtl; }
+    [dir="rtl"] .static-masthead-inner { direction: rtl; }
     [dir="rtl"] article { direction: rtl; }
     @media (max-width: 720px) {
-      .site-header-inner { align-items: flex-start; flex-direction: column; }
-      main { padding: 30px 16px 48px; }
-      h1 { font-size: 2.35rem; }
-      article { padding: 20px; }
+      .static-masthead-inner { align-items: flex-start; flex-direction: column; padding: 18px 16px; }
+      .static-main { padding: 32px 16px 50px; }
+      article { padding: 22px 0; }
     }
     ${input.extraStyle ?? ""}
   </style>
 </head>
 <body data-template="${input.key}">
   <div class="reading-progress" aria-hidden="true"><span></span></div>
-  <header class="site-header">
-    <div class="site-header-inner">
-      <a class="brand" href="${portableHref(page.currentPath, "/")}">${escapeHtml(page.blogName)}</a>
-      <nav class="site-nav" aria-label="Primary">
+  <header class="static-masthead">
+    <div class="static-masthead-inner">
+      <a class="static-brand" href="${portableHref(page.currentPath, "/")}">${escapeHtml(page.blogName)}</a>
+      <nav class="static-nav" aria-label="Primary">
         <a href="${portableHref(page.currentPath, "/")}">${escapeHtml(pageLabels.home)}</a>
         <a href="${portableHref(page.currentPath, "/blog/")}">${escapeHtml(pageLabels.posts)}</a>
       </nav>
     </div>
   </header>
-  <main>${page.body}</main>
+  <main class="static-main">${page.body}</main>
 </body>
 </html>`;
     },

@@ -101,6 +101,7 @@ describe("generateStaticSite", () => {
 
     const html = await fs.readFile(path.join(outputDir, "index.html"), "utf8");
     expect(html).toContain('data-template="editorial"');
+    expect(html).toContain("static-masthead");
   });
 
   it("uses the editorial template by default", async () => {
@@ -117,6 +118,7 @@ describe("generateStaticSite", () => {
     expect(html).toContain('data-template="editorial"');
     expect(html).toContain("--forest: #0f6f5c");
     expect(html).toContain("class=\"post-list\"");
+    expect(html).toContain("static-brand");
   });
 
   it("rejects public paths that would write outside the output directory", async () => {
