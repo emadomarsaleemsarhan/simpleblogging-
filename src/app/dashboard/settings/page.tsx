@@ -40,7 +40,12 @@ export default async function SettingsPage() {
 
   return (
     <section>
-      <h1>{translator.t("settings.title")}</h1>
+      <div className="page-title-row">
+        <div>
+          <h1>{translator.t("settings.title")}</h1>
+          <p>{translator.t("settings.templateHelp")}</p>
+        </div>
+      </div>
       <BlogSettingsForm
         action={updateSettings}
         blog={blog}
@@ -53,6 +58,7 @@ export default async function SettingsPage() {
           futureProviders: translator.t("settings.futureProviders"),
           githubRepository: translator.t("settings.githubRepository"),
           githubReserved: translator.t("settings.githubReserved"),
+          templateHelp: translator.t("settings.templateHelp"),
           save: translator.t("settings.save"),
         }}
         templates={staticTemplateOptions}

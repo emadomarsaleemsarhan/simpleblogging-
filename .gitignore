@@ -6,6 +6,7 @@ storage/
 dist/
 build/
 .tmp/
+.local-storage/
 test-results/
 playwright-report/
 .env

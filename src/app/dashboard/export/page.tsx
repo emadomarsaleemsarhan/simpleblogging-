@@ -21,18 +21,23 @@ export default async function ExportPage() {
 
   return (
     <section>
-      <h1>{translator.t("export.title")}</h1>
-      <p>{translator.t("export.description")}</p>
-      <ExportButton
-        labels={{
-          exportWebsite: translator.t("export.exportWebsite"),
-          exporting: translator.t("export.exporting"),
-          failed: translator.t("export.failed"),
-          completed: translator.t("export.completed"),
-          preview: translator.t("export.preview"),
-          downloadZip: translator.t("export.downloadZip"),
-        }}
-      />
+      <div className="publishing-panel editorial-panel">
+        <div>
+          <p className="eyebrow">{translator.t("export.title")}</p>
+          <h1>{translator.t("export.pipelineTitle")}</h1>
+          <p>{translator.t("export.pipelineCopy")}</p>
+        </div>
+        <ExportButton
+          labels={{
+            exportWebsite: translator.t("export.exportWebsite"),
+            exporting: translator.t("export.exporting"),
+            failed: translator.t("export.failed"),
+            completed: translator.t("export.completed"),
+            preview: translator.t("export.preview"),
+            downloadZip: translator.t("export.downloadZip"),
+          }}
+        />
+      </div>
       <h2>{translator.t("export.recent")}</h2>
       <div className="table-frame editorial-panel">
         <table className="data-table">

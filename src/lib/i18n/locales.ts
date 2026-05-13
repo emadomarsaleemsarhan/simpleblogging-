@@ -24,6 +24,9 @@ export type MessageKey =
   | "public.features.review"
   | "public.features.templates"
   | "public.features.static"
+  | "dashboard.stats.posts"
+  | "dashboard.stats.review"
+  | "dashboard.stats.published"
   | "auth.signIn"
   | "auth.signingIn"
   | "auth.email"
@@ -55,6 +58,8 @@ export type MessageKey =
   | "export.updated"
   | "export.unavailable"
   | "export.empty"
+  | "export.pipelineTitle"
+  | "export.pipelineCopy"
   | "settings.title"
   | "settings.siteLanguage"
   | "settings.template"
@@ -64,6 +69,7 @@ export type MessageKey =
   | "settings.futureProviders"
   | "settings.githubRepository"
   | "settings.githubReserved"
+  | "settings.templateHelp"
   | "settings.save"
   | "common.save";
 
@@ -89,6 +95,9 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "public.features.review": "Editorial workflow",
     "public.features.templates": "Selectable templates",
     "public.features.static": "Portable static export",
+    "dashboard.stats.posts": "Posts",
+    "dashboard.stats.review": "In review",
+    "dashboard.stats.published": "Published",
     "auth.signIn": "Sign in",
     "auth.signingIn": "Signing in...",
     "auth.email": "Email",
@@ -120,6 +129,8 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "export.updated": "Updated",
     "export.unavailable": "Unavailable",
     "export.empty": "No exports yet.",
+    "export.pipelineTitle": "Static publishing pipeline",
+    "export.pipelineCopy": "Generate a portable website package with relative links, assets, sitemap, RSS, and preview pages.",
     "settings.title": "Settings",
     "settings.siteLanguage": "Published site language",
     "settings.template": "Published site template",
@@ -129,6 +140,7 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "settings.futureProviders": "Future publishing providers",
     "settings.githubRepository": "GitHub repository",
     "settings.githubReserved": "Reserved for GitHub publishing phase",
+    "settings.templateHelp": "Choose the default visual system used when exporting the static site.",
     "settings.save": "Save settings",
     "common.save": "Save",
   },
@@ -153,6 +165,9 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "public.features.review": "\u0633\u064a\u0631 \u0639\u0645\u0644 \u062a\u062d\u0631\u064a\u0631\u064a",
     "public.features.templates": "\u0642\u0648\u0627\u0644\u0628 \u0642\u0627\u0628\u0644\u0629 \u0644\u0644\u0627\u062e\u062a\u064a\u0627\u0631",
     "public.features.static": "\u062a\u0635\u062f\u064a\u0631 \u062b\u0627\u0628\u062a \u0628\u0631\u0648\u0627\u0628\u0637 \u0645\u062d\u0645\u0648\u0644\u0629",
+    "dashboard.stats.posts": "\u0627\u0644\u0645\u0646\u0634\u0648\u0631\u0627\u062a",
+    "dashboard.stats.review": "\u0642\u064a\u062f \u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629",
+    "dashboard.stats.published": "\u0645\u0646\u0634\u0648\u0631",
     "auth.signIn": "\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644",
     "auth.signingIn": "\u062c\u0627\u0631\u064a \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644...",
     "auth.email": "\u0627\u0644\u0628\u0631\u064a\u062f \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a",
@@ -184,6 +199,8 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "export.updated": "\u0622\u062e\u0631 \u062a\u062d\u062f\u064a\u062b",
     "export.unavailable": "\u063a\u064a\u0631 \u0645\u062a\u0627\u062d",
     "export.empty": "\u0644\u0627 \u062a\u0648\u062c\u062f \u0639\u0645\u0644\u064a\u0627\u062a \u062a\u0635\u062f\u064a\u0631 \u0628\u0639\u062f.",
+    "export.pipelineTitle": "\u0645\u0633\u0627\u0631 \u0646\u0634\u0631 \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u062b\u0627\u0628\u062a",
+    "export.pipelineCopy": "\u0623\u0646\u0634\u0626 \u062d\u0632\u0645\u0629 \u0645\u0648\u0642\u0639 \u0645\u062d\u0645\u0648\u0644\u0629 \u0628\u0631\u0648\u0627\u0628\u0637 \u0646\u0633\u0628\u064a\u0629 \u0648\u0645\u0644\u0641\u0627\u062a \u0623\u0635\u0648\u0644 \u0648\u062e\u0631\u0627\u0626\u0637 \u0645\u0648\u0642\u0639 \u0648RSS \u0648\u0635\u0641\u062d\u0627\u062a \u0645\u0639\u0627\u064a\u0646\u0629.",
     "settings.title": "\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a",
     "settings.siteLanguage": "\u0644\u063a\u0629 \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0645\u0646\u0634\u0648\u0631",
     "settings.template": "\u0642\u0627\u0644\u0628 \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0645\u0646\u0634\u0648\u0631",
@@ -193,6 +210,7 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "settings.futureProviders": "\u0645\u0632\u0648\u062f\u0648 \u0627\u0644\u0646\u0634\u0631 \u0644\u0627\u062d\u0642\u0627",
     "settings.githubRepository": "\u0645\u0633\u062a\u0648\u062f\u0639 GitHub",
     "settings.githubReserved": "\u0645\u062d\u062c\u0648\u0632 \u0644\u0645\u0631\u062d\u0644\u0629 \u0627\u0644\u0646\u0634\u0631 \u0639\u0628\u0631 GitHub",
+    "settings.templateHelp": "\u0627\u062e\u062a\u0631 \u0627\u0644\u0646\u0638\u0627\u0645 \u0627\u0644\u0628\u0635\u0631\u064a \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645 \u0639\u0646\u062f \u062a\u0635\u062f\u064a\u0631 \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u062b\u0627\u0628\u062a.",
     "settings.save": "\u062d\u0641\u0638 \u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a",
     "common.save": "\u062d\u0641\u0638",
   },

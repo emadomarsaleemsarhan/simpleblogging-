@@ -15,6 +15,7 @@ export function BlogSettingsForm({
     futureProviders: string;
     githubRepository: string;
     githubReserved: string;
+    templateHelp: string;
     save: string;
   };
   templates: { key: string; name: string }[];
@@ -40,16 +41,19 @@ export function BlogSettingsForm({
           <option value="ar">{"\u0627\u0644\u0639\u0631\u0628\u064a\u0629"}</option>
         </select>
       </label>
-      <label>
-        <span>{labels.template}</span>
-        <select name="templateKey" defaultValue={blog.templateKey}>
-          {templates.map((template) => (
-            <option key={template.key} value={template.key}>
-              {template.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      <div className="template-choice-field">
+        <label>
+          <span>{labels.template}</span>
+          <select name="templateKey" defaultValue={blog.templateKey}>
+            {templates.map((template) => (
+              <option key={template.key} value={template.key}>
+                {template.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <p>{labels.templateHelp}</p>
+      </div>
       <fieldset className="future-settings">
         <legend>{labels.futureProviders}</legend>
         <label>

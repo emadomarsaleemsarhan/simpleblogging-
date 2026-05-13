@@ -14,6 +14,8 @@ export default async function PostsPage() {
     include: { category: true },
     orderBy: { updatedAt: "desc" },
   });
+  const inReviewCount = posts.filter((post) => post.status === "IN_REVIEW").length;
+  const publishedCount = posts.filter((post) => post.status === "PUBLISHED").length;
 
   return (
     <section>
@@ -25,6 +27,20 @@ export default async function PostsPage() {
         <Link className="button-link" href="/dashboard/posts/upload">
           {translator.t("posts.upload")}
         </Link>
+      </div>
+      <div className="dashboard-stat-grid">
+        <article className="dashboard-stat-card">
+          <span>{translator.t("dashboard.stats.posts")}</span>
+          <strong>{posts.length}</strong>
+        </article>
+        <article className="dashboard-stat-card">
+          <span>{translator.t("dashboard.stats.review")}</span>
+          <strong>{inReviewCount}</strong>
+        </article>
+        <article className="dashboard-stat-card">
+          <span>{translator.t("dashboard.stats.published")}</span>
+          <strong>{publishedCount}</strong>
+        </article>
       </div>
       <div className="table-frame editorial-panel">
         <table className="data-table">
