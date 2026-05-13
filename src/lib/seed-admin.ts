@@ -1,4 +1,6 @@
-type SeedEnvironment = Partial<Pick<NodeJS.ProcessEnv, "NODE_ENV" | "SEED_ADMIN_EMAIL" | "SEED_ADMIN_PASSWORD">>;
+type SeedEnvironment = Partial<
+  Pick<NodeJS.ProcessEnv, "NODE_ENV" | "SEED_ADMIN_EMAIL" | "SEED_ADMIN_PASSWORD" | "SEED_ADMIN_UPDATE_PASSWORD">
+>;
 
 const developmentEmail = "admin@example.com";
 const developmentPassword = "admin12345";
@@ -25,5 +27,5 @@ export function getSeedAdminCredentials(env: SeedEnvironment = process.env) {
 }
 
 export function shouldUpdateSeedPassword(env: SeedEnvironment = process.env) {
-  return env.NODE_ENV === "production";
+  return env.NODE_ENV === "production" || env.SEED_ADMIN_UPDATE_PASSWORD === "true";
 }

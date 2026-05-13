@@ -19,7 +19,7 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
           </div>
           <LocaleSwitcher currentLocale={translator.locale} returnTo="/dashboard/posts" />
         </header>
-        {children}
+        <div className="dashboard-content">{children}</div>
       </main>
     </div>
   );

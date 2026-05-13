@@ -7,6 +7,10 @@ test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
   await page.getByLabel("Email").fill("admin@example.com");
   await page.getByLabel("Password").fill("admin12345");
   await page.getByRole("button", { name: "Sign in" }).click();
+  await page.waitForURL("**/dashboard/posts");
+
+  await expect(page.getByText("Publisher OS").first()).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Dashboard" })).toBeVisible();
 
   await page.getByLabel("Dashboard").getByRole("link", { name: "Upload Word" }).click();
   await page.getByLabel("Word file").setInputFiles("tests/fixtures/docx/basic.docx");

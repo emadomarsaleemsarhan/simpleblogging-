@@ -384,15 +384,20 @@ h3,
 }
 
 .dashboard-shell {
+  background: #101713;
   display: grid;
   grid-template-columns: 264px minmax(0, 1fr);
   min-height: 100vh;
 }
 
 .dashboard-sidebar {
-  background: linear-gradient(180deg, var(--forest-dark), #102b25);
+  background: #101713;
+  border-right: 1px solid rgba(255, 253, 248, 0.10);
   color: white;
   padding: 24px 18px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 
 .dashboard-brand {
@@ -402,6 +407,21 @@ h3,
   font-size: 1.2rem;
   font-weight: 800;
   margin-bottom: 34px;
+}
+
+.dashboard-brand > span:last-child {
+  display: grid;
+  gap: 2px;
+}
+
+.dashboard-brand small,
+.dashboard-nav-label {
+  color: rgba(255, 253, 248, 0.54);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .dashboard-brand-mark {
@@ -422,6 +442,10 @@ h3,
   gap: 7px;
 }
 
+.dashboard-nav-label {
+  margin: 0 0 10px;
+}
+
 .dashboard-nav-link {
   border-radius: var(--radius-sm);
   color: rgba(255,255,255,0.78);
@@ -435,15 +459,28 @@ h3,
 }
 
 .dashboard-main {
+  background:
+    linear-gradient(135deg, rgba(15, 111, 92, 0.06), transparent 34%),
+    radial-gradient(circle at 82% 0%, rgba(201, 132, 43, 0.10), transparent 30%),
+    var(--paper);
+  min-width: 0;
   padding: 28px 34px 44px;
 }
 
 .dashboard-header {
   align-items: center;
+  border-bottom: 1px solid var(--line);
   display: flex;
   gap: 16px;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin: 0 auto 30px;
+  max-width: 1180px;
+  padding-bottom: 18px;
+}
+
+.dashboard-content {
+  margin: 0 auto;
+  max-width: 1180px;
 }
 
 .dashboard-kicker,
@@ -768,6 +805,8 @@ section > p {
 
 [dir="rtl"] .dashboard-sidebar {
   background: linear-gradient(180deg, var(--forest-dark), #102b25);
+  border-left: 1px solid rgba(255, 253, 248, 0.10);
+  border-right: 0;
 }
 
 [dir="rtl"] .dashboard-brand,
@@ -856,8 +895,10 @@ section > p {
   }
 
   .dashboard-sidebar {
+    height: auto;
     overflow-x: hidden;
     padding: 16px;
+    position: relative;
   }
 
   .dashboard-brand {
