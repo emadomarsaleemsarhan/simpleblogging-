@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from "next/link";
 
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { getTranslator } from "@/lib/i18n/server";
@@ -9,13 +10,19 @@ export default async function LoginPage() {
   const { locale, t } = await getTranslator();
 
   return (
-    <main className="auth-page">
+    <main className="auth-page publisher-auth">
+      <section className="auth-story">
+        <Link className="platform-brand" href="/">
+          <span className="platform-brand-mark">BP</span>
+          <span>Blog Publisher</span>
+        </Link>
+        <p className="eyebrow">Publisher OS</p>
+        <h1>{t("auth.signIn")}</h1>
+        <p>{t("auth.subtitle")}</p>
+      </section>
       <section className="auth-card editorial-panel">
         <div className="auth-card-header">
           <LocaleSwitcher currentLocale={locale} returnTo="/login" />
-          <p className="eyebrow">Blog Publisher</p>
-          <h1 className="auth-brand-title">{t("auth.signIn")}</h1>
-          <p>{t("auth.subtitle")}</p>
         </div>
         <Suspense fallback={null}>
           <LoginForm

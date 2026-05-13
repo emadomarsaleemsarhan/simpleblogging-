@@ -6,7 +6,7 @@ import { importDocxPost } from "@/lib/posts/import-docx";
 
 export async function POST(request: Request) {
   const session = await requireSession();
-  const formData = await request.formData();
+  const formData = (await request.formData()) as unknown as { get(name: string): FormDataEntryValue | null };
   const file = formData.get("file");
 
   if (!(file instanceof File)) {

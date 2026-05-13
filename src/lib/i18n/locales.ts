@@ -9,6 +9,21 @@ export type MessageKey =
   | "nav.taxonomy"
   | "nav.export"
   | "nav.settings"
+  | "public.nav.features"
+  | "public.nav.templates"
+  | "public.hero.kicker"
+  | "public.hero.title"
+  | "public.hero.subtitle"
+  | "public.hero.signIn"
+  | "public.hero.preview"
+  | "public.flow.title"
+  | "public.flow.upload"
+  | "public.flow.review"
+  | "public.flow.export"
+  | "public.features.docx"
+  | "public.features.review"
+  | "public.features.templates"
+  | "public.features.static"
   | "auth.signIn"
   | "auth.signingIn"
   | "auth.email"
@@ -59,6 +74,21 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "nav.taxonomy": "Categories & Tags",
     "nav.export": "Export",
     "nav.settings": "Settings",
+    "public.nav.features": "Features",
+    "public.nav.templates": "Templates",
+    "public.hero.kicker": "Static publishing platform",
+    "public.hero.title": "Word to static publishing",
+    "public.hero.subtitle": "Convert DOCX files into reviewed posts, organize categories and tags, then export a fast static website.",
+    "public.hero.signIn": "Sign in",
+    "public.hero.preview": "Preview template",
+    "public.flow.title": "Publishing flow",
+    "public.flow.upload": "Upload DOCX",
+    "public.flow.review": "Review and approve",
+    "public.flow.export": "Export ZIP or GitHub-ready site",
+    "public.features.docx": "DOCX conversion",
+    "public.features.review": "Editorial workflow",
+    "public.features.templates": "Selectable templates",
+    "public.features.static": "Portable static export",
     "auth.signIn": "Sign in",
     "auth.signingIn": "Signing in...",
     "auth.email": "Email",
@@ -108,6 +138,21 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "nav.taxonomy": "\u0627\u0644\u062a\u0635\u0646\u064a\u0641\u0627\u062a \u0648\u0627\u0644\u0648\u0633\u0648\u0645",
     "nav.export": "\u0627\u0644\u062a\u0635\u062f\u064a\u0631",
     "nav.settings": "\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a",
+    "public.nav.features": "\u0627\u0644\u0645\u0632\u0627\u064a\u0627",
+    "public.nav.templates": "\u0627\u0644\u0642\u0648\u0627\u0644\u0628",
+    "public.hero.kicker": "\u0645\u0646\u0635\u0629 \u0646\u0634\u0631 \u0645\u0648\u0627\u0642\u0639 \u062b\u0627\u0628\u062a\u0629",
+    "public.hero.title": "\u0645\u0646 Word \u0625\u0644\u0649 \u0645\u0648\u0642\u0639 \u062b\u0627\u0628\u062a",
+    "public.hero.subtitle": "\u062d\u0648\u0651\u0644 \u0645\u0644\u0641\u0627\u062a DOCX \u0625\u0644\u0649 \u062a\u062f\u0648\u064a\u0646\u0627\u062a \u0642\u0627\u0628\u0644\u0629 \u0644\u0644\u0645\u0631\u0627\u062c\u0639\u0629\u060c \u0648\u0646\u0638\u0651\u0645 \u0627\u0644\u062a\u0635\u0646\u064a\u0641\u0627\u062a \u0648\u0627\u0644\u0648\u0633\u0648\u0645\u060c \u062b\u0645 \u0635\u062f\u0651\u0631 \u0645\u0648\u0642\u0639\u064b\u0627 \u062b\u0627\u0628\u062a\u064b\u0627 \u0633\u0631\u064a\u0639\u064b\u0627.",
+    "public.hero.signIn": "\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644",
+    "public.hero.preview": "\u0645\u0639\u0627\u064a\u0646\u0629 \u0627\u0644\u0642\u0627\u0644\u0628",
+    "public.flow.title": "\u0645\u0633\u0627\u0631 \u0627\u0644\u0646\u0634\u0631",
+    "public.flow.upload": "\u0631\u0641\u0639 DOCX",
+    "public.flow.review": "\u0645\u0631\u0627\u062c\u0639\u0629 \u0648\u0627\u0639\u062a\u0645\u0627\u062f",
+    "public.flow.export": "\u062a\u0635\u062f\u064a\u0631 ZIP \u0623\u0648 \u0645\u0648\u0642\u0639 \u062c\u0627\u0647\u0632 \u0644\u0640 GitHub",
+    "public.features.docx": "\u062a\u062d\u0648\u064a\u0644 DOCX",
+    "public.features.review": "\u0633\u064a\u0631 \u0639\u0645\u0644 \u062a\u062d\u0631\u064a\u0631\u064a",
+    "public.features.templates": "\u0642\u0648\u0627\u0644\u0628 \u0642\u0627\u0628\u0644\u0629 \u0644\u0644\u0627\u062e\u062a\u064a\u0627\u0631",
+    "public.features.static": "\u062a\u0635\u062f\u064a\u0631 \u062b\u0627\u0628\u062a \u0628\u0631\u0648\u0627\u0628\u0637 \u0645\u062d\u0645\u0648\u0644\u0629",
     "auth.signIn": "\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644",
     "auth.signingIn": "\u062c\u0627\u0631\u064a \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644...",
     "auth.email": "\u0627\u0644\u0628\u0631\u064a\u062f \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a",
