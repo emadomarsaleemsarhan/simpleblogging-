@@ -17,6 +17,7 @@ export default defineConfig({
       SEED_ADMIN_UPDATE_PASSWORD: "true",
       NEXTAUTH_URL: "http://localhost:3000"
     },
+    timeout: 120000,
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI
   },

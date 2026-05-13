@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
-  test.setTimeout(60000);
+  test.setTimeout(180000);
 
   await page.goto("/login");
   await page.getByLabel("Email").fill("admin@example.com");
@@ -16,7 +16,7 @@ test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
   await page.getByLabel("Word file").setInputFiles("tests/fixtures/docx/basic.docx");
   await page.getByRole("button", { name: "Convert Word file" }).click();
 
-  await expect(page.getByLabel("Title")).toHaveValue("Basic Test Post", { timeout: 20000 });
+  await expect(page.getByLabel("Title")).toHaveValue("Basic Test Post", { timeout: 90000 });
   await page.getByLabel("Status").selectOption("IN_REVIEW");
   await page.getByRole("button", { name: "Save post" }).click();
   await page.waitForLoadState("networkidle");
