@@ -1,0 +1,157 @@
+# Advanced Template System Design
+
+Date: 2026-05-14
+Status: Approved concept, awaiting implementation plan
+
+## Goal
+
+Build Phase 2.1 of Blog Publisher: a practical template system with ready-made templates and simple per-blog customization. This phase comes before GitHub Publishing so exported ZIPs and future GitHub deploys use the same selected template and theme settings.
+
+## Scope
+
+This phase adds:
+
+- Three built-in static site templates:
+  - `editorial`: the current Publisher OS editorial template.
+  - `minimal`: a clean, quiet, fast-reading template.
+  - `magazine`: a denser publication template for multiple posts, categories, and tags.
+- Simple per-blog template customization:
+  - primary color,
+  - secondary/accent color,
+  - background color,
+  - heading style: `classic`, `modern`, or `bold`.
+- A clearer Templates area inside Settings.
+- Template preview before saving.
+- The selected template and theme settings applied consistently to:
+  - in-admin export preview,
+  - generated ZIP HTML,
+  - sitemap/RSS domainless output behavior,
+  - future GitHub publishing output.
+
+This phase does not build a full drag-and-drop template builder.
+
+## Data Model
+
+Extend `Blog` with simple theme fields:
+
+- `templateKey String @default("editorial")`
+- `themePrimaryColor String @default("#0f6f5c")`
+- `themeSecondaryColor String @default("#c9842b")`
+- `themeBackgroundColor String @default("#f6f1e7")`
+- `themeHeadingStyle String @default("classic")`
+
+The values are stored directly on `Blog` because settings are per blog and small. No separate template settings table is needed for this phase.
+
+## Template Model
+
+The static template layer should accept both the template key and theme settings.
+
+Each template definition should expose:
+
+- `key`
+- `name`
+- `description`
+- `labels(locale)`
+- `renderPage(page)`
+- default theme values where needed
+
+Template rendering should use safe CSS custom properties generated from stored settings:
+
+- `--theme-primary`
+- `--theme-secondary`
+- `--theme-background`
+- `--heading-font`
+- `--heading-weight`
+
+Color inputs must be validated before saving. Only hex colors in `#rgb` or `#rrggbb` format are accepted.
+
+## User Experience
+
+In Settings, the current template selector becomes a richer Templates section:
+
+- Template cards for Editorial, Minimal, and Magazine.
+- Each card shows name, short description, and a visual hint using CSS-only preview blocks.
+- The selected template is visually clear.
+- Simple theme controls:
+  - primary color input,
+  - secondary color input,
+  - background color input,
+  - heading style select.
+- A Preview Template action opens an in-admin preview route using unsaved form values where practical, or the currently saved settings for the first implementation.
+- Save persists template and theme values.
+
+The first implementation may preview saved settings only, as long as the UI makes this clear by saving before previewing or by showing the current saved preview.
+
+## Static Generation
+
+The generator should pass theme settings from `Blog` to the rendering layer.
+
+All generated HTML remains database-free and portable:
+
+- HTML navigation uses relative links through existing portable-link helpers.
+- RSS and sitemap remain domainless/root-relative as recently fixed.
+- No generated file should include `localhost` unless the user wrote it inside post content.
+
+## Templates
+
+### Editorial
+
+Keeps the current Publisher OS publication feel:
+
+- warm paper background,
+- strong masthead,
+- serif editorial headings,
+- clear article readability.
+
+### Minimal
+
+Focuses on speed and calm reading:
+
+- almost no decorative framing,
+- narrow content width,
+- restrained nav,
+- high whitespace.
+
+### Magazine
+
+Supports a more active publication feel:
+
+- stronger index/list styling,
+- more visual category/tag hierarchy,
+- compact repeated post cards,
+- bolder masthead.
+
+## Error Handling
+
+Invalid theme settings should fail at save time with a clear error rather than corrupting template rendering.
+
+Fallback behavior:
+
+- Unknown template keys resolve to `editorial`.
+- Missing theme fields resolve to default values.
+- Unknown heading style resolves to `classic`.
+
+## Testing
+
+Unit tests should cover:
+
+- parsing and validating template keys,
+- parsing and validating theme colors,
+- default theme settings,
+- each template rendering its marker/class,
+- generated static files applying selected theme settings,
+- RSS and sitemap staying domainless.
+
+E2E or focused browser tests should cover:
+
+- settings page shows the three templates,
+- changing template and colors persists,
+- export preview uses the selected template.
+
+## Out Of Scope
+
+- Drag-and-drop builder.
+- Custom HTML/CSS editor.
+- Template marketplace.
+- User-uploaded theme packages.
+- GitHub Publishing implementation. That becomes Phase 2.2 and consumes the output generated by this template system.
