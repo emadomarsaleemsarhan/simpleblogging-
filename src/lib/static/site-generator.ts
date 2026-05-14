@@ -90,7 +90,7 @@ export async function generateStaticSite(input: {
     publicPaths.push(publicPath);
   }
 
-  await writeFile(input.outputDir, "sitemap.xml", renderSitemap(input.blog.baseUrl, publicPaths), writtenFiles);
+  await writeFile(input.outputDir, "sitemap.xml", renderSitemap(publicPaths), writtenFiles);
   await writeFile(input.outputDir, "rss.xml", renderRss(input.blog, input.posts), writtenFiles);
   await writeFile(input.outputDir, "robots.txt", "User-agent: *\nAllow: /\nSitemap: /sitemap.xml\n", writtenFiles);
 

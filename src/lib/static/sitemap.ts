@@ -1,8 +1,8 @@
-import { absoluteUrl } from "./render";
+import { rootRelative } from "./links";
 
-export function renderSitemap(baseUrl: string, paths: string[]) {
+export function renderSitemap(paths: string[]) {
   const urls = paths
-    .map((pathname) => `  <url><loc>${absoluteUrl(baseUrl, pathname)}</loc></url>`)
+    .map((pathname) => `  <url><loc>${rootRelative(pathname)}</loc></url>`)
     .join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>

@@ -1,13 +1,14 @@
 import type { StaticBlog, StaticPost } from "./render";
-import { absoluteUrl, postPath } from "./render";
+import { rootRelative } from "./links";
+import { postPath } from "./render";
 
 export function renderRss(blog: StaticBlog, posts: StaticPost[]) {
   const items = posts
     .map(
       (post) => `<item>
   <title>${escapeXml(post.title)}</title>
-  <link>${absoluteUrl(blog.baseUrl, postPath(post.slug))}</link>
-  <guid>${absoluteUrl(blog.baseUrl, postPath(post.slug))}</guid>
+  <link>${rootRelative(postPath(post.slug))}</link>
+  <guid>${rootRelative(postPath(post.slug))}</guid>
   <description>${escapeXml(post.metaDescription)}</description>
   <pubDate>${post.updatedAt.toUTCString()}</pubDate>
 </item>`,
@@ -18,7 +19,7 @@ export function renderRss(blog: StaticBlog, posts: StaticPost[]) {
 <rss version="2.0">
 <channel>
   <title>${escapeXml(blog.name)}</title>
-  <link>${absoluteUrl(blog.baseUrl, "/")}</link>
+  <link>/</link>
   <description>${escapeXml(blog.name)}</description>
 ${items}
 </channel>

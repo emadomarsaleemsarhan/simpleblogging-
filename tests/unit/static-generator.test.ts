@@ -89,6 +89,35 @@ describe("generateStaticSite", () => {
     expect(post).toContain('href="../index.html"');
   });
 
+  it("keeps sitemap and RSS links free of deployment domains", async () => {
+    const outputDir = path.join(process.cwd(), ".tmp/static-feed-links-test");
+    await fs.rm(outputDir, { recursive: true, force: true });
+
+    await generateStaticSite({
+      blog: { name: "My Blog", baseUrl: "http://localhost:52345", locale: "en" },
+      posts: [
+        {
+          title: "Hello",
+          slug: "hello",
+          html: "<h1>Hello</h1><p>World</p>",
+          metaDescription: "World",
+          updatedAt: new Date("2026-05-04T00:00:00Z"),
+          tags: [],
+          category: null,
+        },
+      ],
+      outputDir,
+    });
+
+    const sitemap = await fs.readFile(path.join(outputDir, "sitemap.xml"), "utf8");
+    const rss = await fs.readFile(path.join(outputDir, "rss.xml"), "utf8");
+
+    expect(sitemap).toContain("<loc>/blog/hello/</loc>");
+    expect(rss).toContain("<link>/blog/hello/</link>");
+    expect(`${sitemap}\n${rss}`).not.toContain("localhost");
+    expect(`${sitemap}\n${rss}`).not.toContain("https://example.com");
+  });
+
   it("renders the selected static template", async () => {
     const outputDir = path.join(process.cwd(), ".tmp/static-template-test");
     await fs.rm(outputDir, { recursive: true, force: true });
