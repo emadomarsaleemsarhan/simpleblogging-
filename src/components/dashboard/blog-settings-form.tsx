@@ -5,7 +5,17 @@ export function BlogSettingsForm({
   templates,
 }: {
   action: (formData: FormData) => Promise<void>;
-  blog: { name: string; slug: string; baseUrl: string; locale: string; templateKey: string };
+  blog: {
+    name: string;
+    slug: string;
+    baseUrl: string;
+    locale: string;
+    templateKey: string;
+    themePrimaryColor: string;
+    themeSecondaryColor: string;
+    themeBackgroundColor: string;
+    themeHeadingStyle: string;
+  };
   labels: {
     blogName: string;
     slug: string;
