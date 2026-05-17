@@ -8,7 +8,7 @@ import { getTranslator } from "@/lib/i18n/server";
 import { parseLocale } from "@/lib/i18n/locales";
 import { normalizeBaseUrl } from "@/lib/settings";
 import { createSlug } from "@/lib/slug";
-import { parseTemplateKey, staticTemplateOptions } from "@/lib/static/templates";
+import { normalizeStaticTheme, parseTemplateKey, staticTemplateOptions } from "@/lib/static/templates";
 
 export default async function SettingsPage() {
   const [session, translator] = await Promise.all([requireSession(), getTranslator()]);
@@ -23,6 +23,12 @@ export default async function SettingsPage() {
     const baseUrl = normalizeBaseUrl(String(formData.get("baseUrl") ?? ""));
     const locale = parseLocale(String(formData.get("locale") ?? ""));
     const templateKey = parseTemplateKey(String(formData.get("templateKey") ?? ""));
+    const theme = normalizeStaticTheme({
+      themePrimaryColor: String(formData.get("themePrimaryColor") ?? ""),
+      themeSecondaryColor: String(formData.get("themeSecondaryColor") ?? ""),
+      themeBackgroundColor: String(formData.get("themeBackgroundColor") ?? ""),
+      themeHeadingStyle: String(formData.get("themeHeadingStyle") ?? ""),
+    });
 
     await db.blog.update({
       where: { id: blog.id },
@@ -32,6 +38,10 @@ export default async function SettingsPage() {
         baseUrl,
         locale,
         templateKey,
+        themePrimaryColor: theme.primaryColor,
+        themeSecondaryColor: theme.secondaryColor,
+        themeBackgroundColor: theme.backgroundColor,
+        themeHeadingStyle: theme.headingStyle,
       },
     });
 
@@ -48,7 +58,17 @@ export default async function SettingsPage() {
       </div>
       <BlogSettingsForm
         action={updateSettings}
-        blog={blog}
+        blog={{
+          name: blog.name,
+          slug: blog.slug,
+          baseUrl: blog.baseUrl,
+          locale: blog.locale,
+          templateKey: blog.templateKey,
+          themePrimaryColor: blog.themePrimaryColor,
+          themeSecondaryColor: blog.themeSecondaryColor,
+          themeBackgroundColor: blog.themeBackgroundColor,
+          themeHeadingStyle: blog.themeHeadingStyle,
+        }}
         labels={{
           blogName: translator.t("settings.blogName"),
           slug: translator.t("settings.slug"),
