@@ -32,6 +32,10 @@ export function BlogSettingsForm({
 }) {
   return (
     <form action={action} className="stack-form editorial-panel">
+      <input type="hidden" name="themePrimaryColor" value={blog.themePrimaryColor} />
+      <input type="hidden" name="themeSecondaryColor" value={blog.themeSecondaryColor} />
+      <input type="hidden" name="themeBackgroundColor" value={blog.themeBackgroundColor} />
+      <input type="hidden" name="themeHeadingStyle" value={blog.themeHeadingStyle} />
       <label>
         <span>{labels.blogName}</span>
         <input name="name" defaultValue={blog.name} required />
