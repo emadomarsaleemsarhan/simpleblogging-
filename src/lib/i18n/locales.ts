@@ -63,6 +63,15 @@ export type MessageKey =
   | "settings.title"
   | "settings.siteLanguage"
   | "settings.template"
+  | "settings.templatesSection"
+  | "settings.themePrimaryColor"
+  | "settings.themeSecondaryColor"
+  | "settings.themeBackgroundColor"
+  | "settings.headingStyle"
+  | "settings.headingClassic"
+  | "settings.headingModern"
+  | "settings.headingBold"
+  | "settings.previewSavedTemplate"
   | "settings.blogName"
   | "settings.slug"
   | "settings.baseUrl"
@@ -134,6 +143,15 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "settings.title": "Settings",
     "settings.siteLanguage": "Published site language",
     "settings.template": "Published site template",
+    "settings.templatesSection": "Templates",
+    "settings.themePrimaryColor": "Primary color",
+    "settings.themeSecondaryColor": "Accent color",
+    "settings.themeBackgroundColor": "Background color",
+    "settings.headingStyle": "Heading style",
+    "settings.headingClassic": "Classic",
+    "settings.headingModern": "Modern",
+    "settings.headingBold": "Bold",
+    "settings.previewSavedTemplate": "Preview saved template",
     "settings.blogName": "Blog name",
     "settings.slug": "Slug",
     "settings.baseUrl": "Base URL",
@@ -204,6 +222,15 @@ const messages: Record<Locale, Record<MessageKey, string>> = {
     "settings.title": "\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a",
     "settings.siteLanguage": "\u0644\u063a\u0629 \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0645\u0646\u0634\u0648\u0631",
     "settings.template": "\u0642\u0627\u0644\u0628 \u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0645\u0646\u0634\u0648\u0631",
+    "settings.templatesSection": "\u0627\u0644\u0642\u0648\u0627\u0644\u0628",
+    "settings.themePrimaryColor": "\u0627\u0644\u0644\u0648\u0646 \u0627\u0644\u0631\u0626\u064a\u0633\u064a",
+    "settings.themeSecondaryColor": "\u0644\u0648\u0646 \u0627\u0644\u062a\u0645\u064a\u064a\u0632",
+    "settings.themeBackgroundColor": "\u0644\u0648\u0646 \u0627\u0644\u062e\u0644\u0641\u064a\u0629",
+    "settings.headingStyle": "\u0646\u0645\u0637 \u0627\u0644\u0639\u0646\u0627\u0648\u064a\u0646",
+    "settings.headingClassic": "\u0643\u0644\u0627\u0633\u064a\u0643\u064a",
+    "settings.headingModern": "\u062d\u062f\u064a\u062b",
+    "settings.headingBold": "\u062c\u0631\u064a\u0621",
+    "settings.previewSavedTemplate": "\u0645\u0639\u0627\u064a\u0646\u0629 \u0627\u0644\u0642\u0627\u0644\u0628 \u0627\u0644\u0645\u062d\u0641\u0648\u0638",
     "settings.blogName": "\u0627\u0633\u0645 \u0627\u0644\u0645\u062f\u0648\u0646\u0629",
     "settings.slug": "\u0627\u0644\u0631\u0627\u0628\u0637",
     "settings.baseUrl": "\u0631\u0627\u0628\u0637 \u0627\u0644\u0645\u0648\u0642\u0639",

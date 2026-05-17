@@ -32,8 +32,15 @@ test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
   await page.waitForLoadState("networkidle");
 
   await page.goto("/dashboard/settings");
+  await expect(page.getByRole("radio", { name: /^Editorial/ })).toBeVisible();
+  await expect(page.getByRole("radio", { name: /^Minimal/ })).toBeVisible();
+  await expect(page.getByRole("radio", { name: /^Magazine/ })).toBeVisible();
+  await page.getByRole("radio", { name: /Magazine/ }).check();
+  await page.getByLabel("Primary color").fill("#123456");
+  await page.getByLabel("Accent color").fill("#abcdef");
+  await page.getByLabel("Background color").fill("#fafafa");
+  await page.getByLabel("Heading style").selectOption("bold");
   await page.getByLabel("Published site language").selectOption("ar");
-  await page.getByLabel("Published site template").selectOption("editorial");
   await page.getByRole("button", { name: "Save settings" }).click();
   await page.waitForLoadState("networkidle");
 
@@ -52,5 +59,5 @@ test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
   const preview = page.frameLocator(".site-preview-frame");
   await expect(preview.locator("html")).toHaveAttribute("lang", "ar");
   await expect(preview.locator("html")).toHaveAttribute("dir", "rtl");
-  await expect(preview.locator("body")).toHaveAttribute("data-template", "editorial");
+  await expect(preview.locator("body")).toHaveAttribute("data-template", "magazine");
 });
