@@ -47,6 +47,10 @@ export async function POST() {
         baseUrl: blog.baseUrl,
         locale: blog.locale,
         templateKey: blog.templateKey,
+        themePrimaryColor: blog.themePrimaryColor,
+        themeSecondaryColor: blog.themeSecondaryColor,
+        themeBackgroundColor: blog.themeBackgroundColor,
+        themeHeadingStyle: blog.themeHeadingStyle,
       },
       posts: posts.map((post) => ({
         title: post.title,

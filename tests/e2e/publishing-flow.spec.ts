@@ -60,4 +60,9 @@ test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
   await expect(preview.locator("html")).toHaveAttribute("lang", "ar");
   await expect(preview.locator("html")).toHaveAttribute("dir", "rtl");
   await expect(preview.locator("body")).toHaveAttribute("data-template", "magazine");
+  const previewHtml = await preview.locator("html").evaluate((element) => element.ownerDocument.documentElement.outerHTML);
+  expect(previewHtml).toContain("--theme-primary: #123456");
+  expect(previewHtml).toContain("--theme-secondary: #abcdef");
+  expect(previewHtml).toContain("--theme-background: #fafafa");
+  expect(previewHtml).toContain("--heading-weight: 950");
 });
