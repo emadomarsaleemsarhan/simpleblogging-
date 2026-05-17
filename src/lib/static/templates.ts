@@ -1,6 +1,50 @@
 import { directionForLocale, parseLocale, type Locale } from "@/lib/i18n/locales";
 import { portableHref } from "./links";
 
+export type StaticTemplateKey = "editorial" | "minimal" | "magazine";
+export type HeadingStyle = "classic" | "modern" | "bold";
+
+export type StaticThemeInput = {
+  themePrimaryColor?: string | null;
+  themeSecondaryColor?: string | null;
+  themeBackgroundColor?: string | null;
+  themeHeadingStyle?: string | null;
+};
+
+export type StaticTheme = {
+  primaryColor: string;
+  secondaryColor: string;
+  backgroundColor: string;
+  headingStyle: HeadingStyle;
+};
+
+export const defaultStaticTheme: StaticTheme = {
+  primaryColor: "#0f6f5c",
+  secondaryColor: "#c9842b",
+  backgroundColor: "#f6f1e7",
+  headingStyle: "classic",
+};
+
+const HEX_COLOR_PATTERN = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+
+export function parseThemeColor(value: string | undefined | null, fallback: string) {
+  const color = String(value ?? "").trim();
+  return HEX_COLOR_PATTERN.test(color) ? color : fallback;
+}
+
+export function parseHeadingStyle(value: string | undefined | null): HeadingStyle {
+  return value === "modern" || value === "bold" || value === "classic" ? value : "classic";
+}
+
+export function normalizeStaticTheme(input: StaticThemeInput): StaticTheme {
+  return {
+    primaryColor: parseThemeColor(input.themePrimaryColor, defaultStaticTheme.primaryColor),
+    secondaryColor: parseThemeColor(input.themeSecondaryColor, defaultStaticTheme.secondaryColor),
+    backgroundColor: parseThemeColor(input.themeBackgroundColor, defaultStaticTheme.backgroundColor),
+    headingStyle: parseHeadingStyle(input.themeHeadingStyle),
+  };
+}
+
 export type StaticTemplateLabels = {
   posts: string;
   home: string;
@@ -21,18 +65,21 @@ export type StaticTemplatePage = {
   previousUrl?: string;
   nextUrl?: string;
   structuredData?: string;
+  theme: StaticTheme;
 };
 
 export type StaticTemplate = {
-  key: string;
+  key: StaticTemplateKey;
   name: string;
+  description: string;
   labels: (locale: Locale) => StaticTemplateLabels;
   renderPage: (page: StaticTemplatePage) => string;
 };
 
 export type StaticTemplateOption = {
-  key: string;
+  key: StaticTemplateKey;
   name: string;
+  description: string;
 };
 
 const labels: Record<Locale, StaticTemplateLabels> = {
@@ -54,10 +101,36 @@ const labels: Record<Locale, StaticTemplateLabels> = {
   },
 };
 
-function createStaticTemplate(input: { key: string; name: string; rootStyle: string; extraStyle?: string }): StaticTemplate {
+function headingVariables(style: HeadingStyle) {
+  if (style === "modern") {
+    return "--heading-font: 'Segoe UI', Tahoma, Arial, sans-serif; --heading-weight: 850;";
+  }
+  if (style === "bold") {
+    return "--heading-font: Georgia, 'Times New Roman', serif; --heading-weight: 950;";
+  }
+  return "--heading-font: Georgia, 'Times New Roman', serif; --heading-weight: 850;";
+}
+
+function themeVariables(theme: StaticTheme) {
+  return `
+    --theme-primary: ${theme.primaryColor};
+    --theme-secondary: ${theme.secondaryColor};
+    --theme-background: ${theme.backgroundColor};
+    ${headingVariables(theme.headingStyle)}
+  `;
+}
+
+function createStaticTemplate(input: {
+  key: StaticTemplateKey;
+  name: string;
+  description: string;
+  rootStyle: string;
+  extraStyle?: string;
+}): StaticTemplate {
   return {
     key: input.key,
     name: input.name,
+    description: input.description,
     labels: (locale) => labels[locale],
     renderPage: (page) => {
       const direction = directionForLocale(page.locale);
@@ -79,7 +152,7 @@ function createStaticTemplate(input: { key: string; name: string; rootStyle: str
   <meta property="og:description" content="${escapeHtml(page.description)}">
   ${page.structuredData ?? ""}
   <style>
-    :root { color-scheme: light; ${input.rootStyle} }
+    :root { color-scheme: light; ${themeVariables(page.theme)} ${input.rootStyle} }
     * { box-sizing: border-box; }
     body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); line-height: 1.72; margin: 0; min-height: 100vh; }
     body::before { background: linear-gradient(135deg, rgba(15, 111, 92, 0.07), transparent 34%), radial-gradient(circle at 86% 0%, rgba(201, 132, 43, 0.12), transparent 30%); content: ""; inset: 0; pointer-events: none; position: fixed; z-index: -1; }
@@ -94,7 +167,7 @@ function createStaticTemplate(input: { key: string; name: string; rootStyle: str
     .static-nav a { border: 1px solid var(--line-strong); border-radius: var(--radius-sm); color: var(--ink-soft); font-weight: 900; padding: 8px 11px; text-decoration: none; }
     .static-nav a:hover { background: var(--ink); border-color: var(--ink); color: white; }
     .static-main { margin: 0 auto; max-width: 1120px; padding: 46px 24px 72px; }
-    h1, h2, h3 { font-family: var(--font-display); letter-spacing: 0; line-height: 1.08; }
+    h1, h2, h3 { font-family: var(--heading-font); font-weight: var(--heading-weight); letter-spacing: 0; line-height: 1.08; }
     h1 { font-size: clamp(2.5rem, 6vw, 4.8rem); margin: 0 0 22px; max-width: 900px; }
     h2 { font-size: 2rem; margin-top: 2.1em; }
     p { color: var(--ink-soft); }
@@ -143,10 +216,11 @@ function createStaticTemplate(input: { key: string; name: string; rootStyle: str
 export const editorialStaticTemplate = createStaticTemplate({
   key: "editorial",
   name: "Editorial",
+  description: "The default Publisher OS editorial template with a warm masthead and strong article rhythm.",
   rootStyle: `
     --font-display: Georgia, 'Times New Roman', serif;
     --font-ui: 'Segoe UI', Tahoma, Arial, sans-serif;
-    --paper: #f6f1e7;
+    --paper: var(--theme-background);
     --paper-deep: #ede4d3;
     --surface: #fffdf8;
     --ink: #16231f;
@@ -154,9 +228,9 @@ export const editorialStaticTemplate = createStaticTemplate({
     --muted: #68766f;
     --line: #ded5c5;
     --line-strong: #c9bda9;
-    --forest: #0f6f5c;
-    --forest-dark: #0a3f35;
-    --amber: #c9842b;
+    --forest: var(--theme-primary);
+    --forest-dark: var(--theme-primary);
+    --amber: var(--theme-secondary);
     --mist: #edf3ef;
     --shadow-soft: 0 18px 48px rgba(22, 35, 31, 0.09);
     --shadow-tight: 0 10px 24px rgba(22, 35, 31, 0.10);
@@ -170,23 +244,86 @@ export const editorialStaticTemplate = createStaticTemplate({
 
 export const defaultStaticTemplate = editorialStaticTemplate;
 
-const legacyDefaultTemplate: StaticTemplateOption = {
-  key: "default",
-  name: "Default (Editorial)",
-};
+export const minimalStaticTemplate = createStaticTemplate({
+  key: "minimal",
+  name: "Minimal",
+  description: "A quiet reading-first template with narrow content and restrained navigation.",
+  rootStyle: `
+    --font-display: Georgia, 'Times New Roman', serif;
+    --font-ui: 'Segoe UI', Tahoma, Arial, sans-serif;
+    --paper: var(--theme-background);
+    --paper-deep: color-mix(in srgb, var(--theme-background) 88%, #111 12%);
+    --surface: #ffffff;
+    --ink: #16231f;
+    --ink-soft: #33423d;
+    --muted: #6a746f;
+    --line: rgba(22, 35, 31, 0.16);
+    --line-strong: rgba(22, 35, 31, 0.26);
+    --forest: var(--theme-primary);
+    --forest-dark: var(--theme-primary);
+    --amber: var(--theme-secondary);
+    --mist: rgba(15, 111, 92, 0.08);
+    --shadow-soft: none;
+    --shadow-tight: none;
+    --radius: 4px;
+    --radius-sm: 4px;
+  `,
+  extraStyle: `
+    body::before { display: none; }
+    .static-masthead { border-bottom: 1px solid var(--line); }
+    .static-brand::before { display: none; }
+    .static-main, .static-masthead-inner { max-width: 860px; }
+    article { background: transparent; max-width: 720px; }
+    .post-list li { background: transparent; box-shadow: none; }
+  `,
+});
 
-const templates = [editorialStaticTemplate];
+export const magazineStaticTemplate = createStaticTemplate({
+  key: "magazine",
+  name: "Magazine",
+  description: "A denser publication template for active blogs with stronger lists and taxonomy pages.",
+  rootStyle: `
+    --font-display: Georgia, 'Times New Roman', serif;
+    --font-ui: 'Segoe UI', Tahoma, Arial, sans-serif;
+    --paper: var(--theme-background);
+    --paper-deep: color-mix(in srgb, var(--theme-background) 82%, #111 18%);
+    --surface: #fffdf8;
+    --ink: #17211e;
+    --ink-soft: #2d3935;
+    --muted: #69766f;
+    --line: rgba(23, 33, 30, 0.18);
+    --line-strong: rgba(23, 33, 30, 0.34);
+    --forest: var(--theme-primary);
+    --forest-dark: var(--theme-primary);
+    --amber: var(--theme-secondary);
+    --mist: rgba(201, 132, 43, 0.14);
+    --shadow-soft: 0 18px 42px rgba(22, 35, 31, 0.10);
+    --shadow-tight: 0 10px 22px rgba(22, 35, 31, 0.11);
+    --radius: 6px;
+    --radius-sm: 4px;
+  `,
+  extraStyle: `
+    .static-masthead { border-bottom-width: 3px; }
+    .static-brand { text-transform: uppercase; }
+    .static-main { max-width: 1220px; }
+    .post-list { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .post-list li { border-top: 5px solid var(--amber); min-height: 128px; }
+  `,
+});
 
-export const staticTemplateOptions: StaticTemplateOption[] = [
-  { key: editorialStaticTemplate.key, name: "Editorial" },
-  legacyDefaultTemplate,
-];
+const templates = [editorialStaticTemplate, minimalStaticTemplate, magazineStaticTemplate];
+
+export const staticTemplateOptions: StaticTemplateOption[] = templates.map((template) => ({
+  key: template.key,
+  name: template.name,
+  description: template.description,
+}));
 
 export function getStaticTemplate(key: string | undefined | null): StaticTemplate {
   return templates.find((template) => template.key === key) ?? defaultStaticTemplate;
 }
 
-export function parseTemplateKey(value: string | undefined | null) {
+export function parseTemplateKey(value: string | undefined | null): StaticTemplateKey {
   return getStaticTemplate(value).key;
 }
 

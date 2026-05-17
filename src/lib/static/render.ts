@@ -1,7 +1,7 @@
 import { paginateHtml } from "@/lib/posts/pagination";
 import { sanitizePostHtml } from "@/lib/html";
 import { portableHref, rootRelative } from "./links";
-import { getStaticLocale, getStaticTemplate } from "./templates";
+import { getStaticLocale, getStaticTemplate, normalizeStaticTheme } from "./templates";
 
 export type StaticPost = {
   title: string;
@@ -18,6 +18,10 @@ export type StaticBlog = {
   baseUrl: string;
   locale?: string;
   templateKey?: string;
+  themePrimaryColor?: string | null;
+  themeSecondaryColor?: string | null;
+  themeBackgroundColor?: string | null;
+  themeHeadingStyle?: string | null;
 };
 
 export function renderPage(input: {
@@ -46,6 +50,7 @@ export function renderPage(input: {
     previousUrl: input.previousPath ? rootRelative(input.previousPath) : undefined,
     nextUrl: input.nextPath ? rootRelative(input.nextPath) : undefined,
     structuredData,
+    theme: normalizeStaticTheme(input.blog),
     body: input.body,
   });
 }

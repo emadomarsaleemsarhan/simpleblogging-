@@ -145,9 +145,36 @@ describe("generateStaticSite", () => {
 
     const html = await fs.readFile(path.join(outputDir, "index.html"), "utf8");
     expect(html).toContain('data-template="editorial"');
-    expect(html).toContain("--forest: #0f6f5c");
+    expect(html).toContain("--theme-primary: #0f6f5c");
     expect(html).toContain("class=\"post-list\"");
     expect(html).toContain("static-brand");
+  });
+
+  it("applies selected template and theme variables to generated HTML", async () => {
+    const outputDir = path.join(process.cwd(), ".tmp/static-themed-template-test");
+    await fs.rm(outputDir, { recursive: true, force: true });
+
+    await generateStaticSite({
+      blog: {
+        name: "My Blog",
+        baseUrl: "https://example.com",
+        locale: "en",
+        templateKey: "magazine",
+        themePrimaryColor: "#123456",
+        themeSecondaryColor: "#abcdef",
+        themeBackgroundColor: "#fafafa",
+        themeHeadingStyle: "bold",
+      },
+      posts: [],
+      outputDir,
+    });
+
+    const html = await fs.readFile(path.join(outputDir, "index.html"), "utf8");
+    expect(html).toContain('data-template="magazine"');
+    expect(html).toContain("--theme-primary: #123456");
+    expect(html).toContain("--theme-secondary: #abcdef");
+    expect(html).toContain("--theme-background: #fafafa");
+    expect(html).toContain("--heading-weight: 950");
   });
 
   it("rejects public paths that would write outside the output directory", async () => {
