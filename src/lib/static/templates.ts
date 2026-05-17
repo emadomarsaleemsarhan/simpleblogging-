@@ -64,7 +64,7 @@ export type StaticTemplatePage = {
   body: string;
   previousUrl?: string;
   nextUrl?: string;
-  structuredData?: string;
+  structuredData?: object;
   theme: StaticTheme;
 };
 
@@ -150,7 +150,7 @@ function createStaticTemplate(input: {
   ${next}
   <meta property="og:title" content="${escapeHtml(page.title)}">
   <meta property="og:description" content="${escapeHtml(page.description)}">
-  ${page.structuredData ?? ""}
+  ${renderStructuredData(page.structuredData)}
   <style>
     :root { color-scheme: light; ${themeVariables(page.theme)} ${input.rootStyle} }
     * { box-sizing: border-box; }
@@ -337,4 +337,19 @@ function escapeHtml(value: string) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function renderStructuredData(value: object | undefined) {
+  if (!value) {
+    return "";
+  }
+
+  const json = JSON.stringify(value)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+
+  return `<script type="application/ld+json">${json}</script>`;
 }

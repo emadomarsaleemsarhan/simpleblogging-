@@ -36,9 +36,6 @@ export function renderPage(input: {
 }) {
   const locale = getStaticLocale(input.blog.locale);
   const template = getStaticTemplate(input.blog.templateKey);
-  const structuredData = input.structuredData
-    ? `<script type="application/ld+json">${escapeHtml(JSON.stringify(input.structuredData))}</script>`
-    : "";
 
   return template.renderPage({
     blogName: input.blog.name,
@@ -49,7 +46,7 @@ export function renderPage(input: {
     canonicalUrl: rootRelative(input.canonicalPath),
     previousUrl: input.previousPath ? rootRelative(input.previousPath) : undefined,
     nextUrl: input.nextPath ? rootRelative(input.nextPath) : undefined,
-    structuredData,
+    structuredData: input.structuredData,
     theme: normalizeStaticTheme(input.blog),
     body: input.body,
   });

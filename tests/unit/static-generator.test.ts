@@ -3,6 +3,14 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { generateStaticSite } from "../../src/lib/static/site-generator";
 
+function extractJsonLd(html: string) {
+  const match = html.match(/<script type="application\/ld\+json">(?<json>[\s\S]*?)<\/script>/);
+  if (!match?.groups?.json) {
+    throw new Error("JSON-LD script was not found");
+  }
+  return match.groups.json;
+}
+
 describe("generateStaticSite", () => {
   it("writes core static files", async () => {
     const outputDir = path.join(process.cwd(), ".tmp/static-test");
@@ -177,6 +185,32 @@ describe("generateStaticSite", () => {
     expect(html).toContain("--heading-weight: 950");
   });
 
+  it("falls back safely when optional theme values are invalid or missing", async () => {
+    const outputDir = path.join(process.cwd(), ".tmp/static-invalid-theme-test");
+    await fs.rm(outputDir, { recursive: true, force: true });
+
+    await generateStaticSite({
+      blog: {
+        name: "My Blog",
+        baseUrl: "https://example.com",
+        locale: "en",
+        themePrimaryColor: "url(javascript:alert(1))",
+        themeSecondaryColor: null,
+        themeBackgroundColor: "red",
+        themeHeadingStyle: "script",
+      },
+      posts: [],
+      outputDir,
+    });
+
+    const html = await fs.readFile(path.join(outputDir, "index.html"), "utf8");
+    expect(html).toContain("--theme-primary: #0f6f5c");
+    expect(html).toContain("--theme-secondary: #c9842b");
+    expect(html).toContain("--theme-background: #f6f1e7");
+    expect(html).toContain("--heading-weight: 850");
+    expect(html).not.toContain("url(javascript:alert(1))");
+  });
+
   it("rejects public paths that would write outside the output directory", async () => {
     const outputDir = path.join(process.cwd(), ".tmp/static-path-traversal-test");
     const storageRoot = path.join(process.cwd(), ".tmp");
@@ -229,5 +263,36 @@ describe("generateStaticSite", () => {
     expect(html).toContain("<p>Unsafe</p>");
     expect(html).not.toContain("onerror");
     expect(html).not.toContain("<script>alert(2)</script>");
+  });
+
+  it("emits parseable JSON-LD while escaping script-breaking content", async () => {
+    const outputDir = path.join(process.cwd(), ".tmp/static-json-ld-test");
+    await fs.rm(outputDir, { recursive: true, force: true });
+
+    await generateStaticSite({
+      blog: { name: "My Blog", baseUrl: "https://example.com", locale: "en" },
+      posts: [
+        {
+          title: 'Unsafe </script><script>alert("x")</script> & line\u2028sep',
+          slug: "json-ld",
+          html: "<p>Safe body</p>",
+          metaDescription: "JSON-LD test",
+          updatedAt: new Date("2026-05-04T00:00:00Z"),
+          tags: [],
+          category: null,
+        },
+      ],
+      outputDir,
+    });
+
+    const html = await fs.readFile(path.join(outputDir, "blog/json-ld/index.html"), "utf8");
+    const json = extractJsonLd(html);
+    const structuredData = JSON.parse(json);
+
+    expect(structuredData.headline).toBe('Unsafe </script><script>alert("x")</script> & line\u2028sep');
+    expect(json).toContain("\\u003c/script\\u003e\\u003cscript\\u003e");
+    expect(json).toContain("\\u0026");
+    expect(json).not.toContain("&quot;");
+    expect(json).not.toContain("</script><script>");
   });
 });
