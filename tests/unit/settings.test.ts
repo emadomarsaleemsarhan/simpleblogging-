@@ -15,7 +15,7 @@ describe("normalizeBaseUrl", () => {
 });
 
 describe("BlogSettingsForm", () => {
-  it("preserves theme settings while visible controls are pending", () => {
+  it("renders template cards and visible theme controls", () => {
     const html = renderToStaticMarkup(
       createElement(BlogSettingsForm, {
         action: async () => {},
@@ -35,20 +35,46 @@ describe("BlogSettingsForm", () => {
           slug: "Slug",
           baseUrl: "Base URL",
           siteLanguage: "Site language",
-          template: "Template",
+          templatesSection: "Templates",
           futureProviders: "Future providers",
           githubRepository: "GitHub repository",
           githubReserved: "Reserved",
           templateHelp: "Choose a template.",
+          themePrimaryColor: "Primary color",
+          themeSecondaryColor: "Accent color",
+          themeBackgroundColor: "Background color",
+          headingStyle: "Heading style",
+          headingClassic: "Classic",
+          headingModern: "Modern",
+          headingBold: "Bold",
+          previewSavedTemplate: "Preview saved template",
           save: "Save",
         },
-        templates: [{ key: "editorial", name: "Editorial" }],
+        templates: [
+          { key: "editorial", name: "Editorial", description: "Editorial template." },
+          { key: "minimal", name: "Minimal", description: "Minimal template." },
+          { key: "magazine", name: "Magazine", description: "Magazine template." },
+        ],
       }),
     );
 
-    expect(html).toContain('type="hidden" name="themePrimaryColor" value="#123456"');
-    expect(html).toContain('type="hidden" name="themeSecondaryColor" value="#abcdef"');
-    expect(html).toContain('type="hidden" name="themeBackgroundColor" value="#fefefe"');
-    expect(html).toContain('type="hidden" name="themeHeadingStyle" value="modern"');
+    expect(html).toContain("<h2 id=\"template-settings-title\">Templates</h2>");
+    expect(html).toContain("<strong>Editorial</strong>");
+    expect(html).toContain("<strong>Minimal</strong>");
+    expect(html).toContain("<strong>Magazine</strong>");
+    expect(html).toContain('type="radio" name="templateKey" checked="" value="editorial"');
+    expect(html).toContain("<span>Primary color</span>");
+    expect(html).toContain('type="color" name="themePrimaryColor" value="#123456"');
+    expect(html).toContain("<span>Accent color</span>");
+    expect(html).toContain('type="color" name="themeSecondaryColor" value="#abcdef"');
+    expect(html).toContain("<span>Background color</span>");
+    expect(html).toContain('type="color" name="themeBackgroundColor" value="#fefefe"');
+    expect(html).toContain("<span>Heading style</span>");
+    expect(html).toContain('<select name="themeHeadingStyle">');
+    expect(html).toContain('<option value="modern" selected="">Modern</option>');
+    expect(html).not.toContain('type="hidden" name="themePrimaryColor"');
+    expect(html).not.toContain('type="hidden" name="themeSecondaryColor"');
+    expect(html).not.toContain('type="hidden" name="themeBackgroundColor"');
+    expect(html).not.toContain('type="hidden" name="themeHeadingStyle"');
   });
 });
