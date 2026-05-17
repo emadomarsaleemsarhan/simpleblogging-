@@ -53,9 +53,13 @@ model Blog {
   name        String
   slug        String       @unique
   baseUrl     String       @default("https://example.com/")
-  locale      String       @default("en")
-  templateKey String       @default("editorial")
-  ownerId     String       @unique
+  locale               String       @default("en")
+  templateKey          String       @default("editorial")
+  themePrimaryColor    String       @default("#0f6f5c")
+  themeSecondaryColor  String       @default("#c9842b")
+  themeBackgroundColor String       @default("#f6f1e7")
+  themeHeadingStyle    String       @default("classic")
+  ownerId              String       @unique
   owner       User         @relation("BlogOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   members     BlogMember[]
   posts       Post[]
