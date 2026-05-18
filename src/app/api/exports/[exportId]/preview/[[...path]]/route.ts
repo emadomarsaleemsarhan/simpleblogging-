@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { requireSession } from "@/lib/auth";
 import { getDefaultBlogForUser } from "@/lib/blogs";
 import { db } from "@/lib/db";
-import { parseExportPayload, previewContentType, resolvePreviewFile } from "@/lib/static/preview";
+import { parseExportPayload, previewContentType, resolvePreviewFile, rewritePreviewHtmlLinks } from "@/lib/static/preview";
 
 export async function GET(request: Request, { params }: { params: Promise<{ exportId: string; path?: string[] }> }) {
   const session = await requireSession();
@@ -31,9 +31,19 @@ export async function GET(request: Request, { params }: { params: Promise<{ expo
 
   try {
     const file = await fs.readFile(filePath);
-    return new NextResponse(file, {
+    const contentType = previewContentType(filePath);
+    const body = contentType.startsWith("text/html")
+      ? rewritePreviewHtmlLinks({
+          html: file.toString("utf8"),
+          currentSegments: path,
+          directoryRequest,
+          previewRootPath: `/api/exports/${exportId}/preview`,
+        })
+      : file;
+
+    return new NextResponse(body, {
       headers: {
-        "Content-Type": previewContentType(filePath),
+        "Content-Type": contentType,
         "X-Content-Type-Options": "nosniff",
       },
     });

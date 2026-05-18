@@ -65,4 +65,5 @@ test("publishes a DOCX post and downloads a ZIP", async ({ page }) => {
   expect(previewHtml).toContain("--theme-secondary: #abcdef");
   expect(previewHtml).toContain("--theme-background: #fafafa");
   expect(previewHtml).toContain("--heading-weight: 950");
+  expect(previewHtml).toContain(`/api/exports/${exportPayload.exportId}/preview/blog/`);
 });
